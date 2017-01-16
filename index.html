@@ -1,4 +1,4 @@
-<html><head><title>fuck</title>
+<html><head><title>E1M1</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 <script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
@@ -8,9 +8,7 @@
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
 
-//scene.scale.set(0.1,0.1,0.1);
-
-UltimateLoader.load("models/elm1.obj", function(object)
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/models/elm1.obj", function(object)
 {
 	//object.scale.set(1, 1, 1);
 	//object.position.set(0,0,0);
@@ -31,6 +29,4 @@ function animate(){
 
 animate();
 
-</script>
-</body>
-</html>
+</script></body></html>
