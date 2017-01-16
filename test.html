@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>carpet</title>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+        <script src="../dist/altspace.min.js"></script>
+    </head>
+    <body>
+        <script>
+	    var scene = new THREE.Scene();
+            var renderer = altspace.getThreeJSRenderer();
+
+            var models = ["e1m1"];
+
+			//var ppm = 203.873596;
+			//scene.scale.set(ppm,ppm,ppm);
+
+            function loadModels() {
+                var multiloader = altspace.utilities.multiloader;
+                multiloader.init({baseUrl: "models/"});
+                loadRequest = new multiloader.LoadRequest();
+                models.forEach(function(name){
+                    loadRequest.objUrls.push(name + ".obj");
+                    loadRequest.mtlUrls.push(name + ".mtl");
+                });
+                multiloader.load(loadRequest, onLoaded);
+            }
+
+            function onLoaded() {
+				scene.add(e1m1 = loadRequest.objects[0]);
+            }
+
+            loadModels();
+
+            function animate(){
+                requestAnimationFrame(animate);
+                renderer.render(scene);
+            }
+ 
+            animate();
+
+        </script>
+    </body>
+</html>
