@@ -54,7 +54,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\brown1.jpg
+map_Kd src\brown1.jpg
 
 newmtl Material__14
 Ns 7.843137
@@ -65,7 +65,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\support2.jpg
+map_Kd src\support2.jpg
 
 newmtl Material__15
 Ns 7.843137
@@ -76,7 +76,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Lite3.jpg
+map_Kd src\lite3.jpg
 
 newmtl Material__16
 Ns 7.843137
@@ -98,7 +98,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Comptall.jpg
+map_Kd src\comptall.jpg
 
 newmtl Material__18
 Ns 7.843137
@@ -109,7 +109,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Compspan.jpg
+map_Kd src\compspan.jpg
 
 newmtl Material__19
 Ns 7.843137
@@ -120,7 +120,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Stargr1.jpg
+map_Kd src\stargr1.jpg
 
 newmtl Material__2
 Ns 7.843137
@@ -142,7 +142,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Comptile.jpg
+map_Kd src\comptile.jpg
 
 newmtl Material__21
 Ns 7.843137
@@ -153,7 +153,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Step1.jpg
+map_Kd src\step1.jpg
 
 newmtl Material__22
 Ns 7.843137
@@ -164,7 +164,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Planet1.jpg
+map_Kd src\planet1.jpg
 
 newmtl Material__23
 Ns 7.843137
@@ -230,7 +230,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\step6.jpg
+map_Kd src\step6.jpg
 
 newmtl Material__29
 Ns 7.843137
@@ -285,7 +285,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Starg3.jpg
+map_Kd src\starg3.jpg
 
 newmtl Material__33
 Ns 7.843137
@@ -296,7 +296,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Sladwall.jpg
+map_Kd src\sladwall.jpg
 
 newmtl Material__34
 Ns 7.843137
@@ -351,7 +351,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Tekwall1.jpg
+map_Kd src\tekwall1.jpg
 
 newmtl Material__39
 Ns 7.843137
@@ -395,7 +395,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Browngrn.jpg
+map_Kd src\browngrn.jpg
 
 newmtl Material__42
 Ns 7.843137
@@ -406,7 +406,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Nuke24.jpg
+map_Kd src\nuke24.jpg
 
 newmtl Material__43
 Ns 7.843137
@@ -461,7 +461,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Startan1.jpg
+map_Kd src\startan1.jpg
 
 newmtl Material__48
 Ns 7.843137
@@ -472,7 +472,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Exitsign.jpg
+map_Kd src\exitsign.jpg
 
 newmtl Material__49
 Ns 7.843137
@@ -549,7 +549,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Brown96.jpg
+map_Kd src\brown96.jpg
 
 newmtl Material__55
 Ns 7.843137
@@ -571,7 +571,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\Ceil5_1.jpg
+map_Kd src\ceil5_1.jpg
 
 newmtl Material__7
 Ns 7.843137
@@ -604,4 +604,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd model\doorstop.jpg
+map_Kd src\doorstop.jpg
