@@ -1,39 +1,36 @@
-<html>
-    <head>
-        <title>fuck</title>
-        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-        <script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
-        <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
-        <script src="../dist/altspace.min.js"></script>
-    </head>
-    <body>
-        <script>
-			var scene = new THREE.Scene();
-			var renderer = altspace.getThreeJSRenderer();
-			
-			//scene.scale.set(0.1,0.1,0.1);
+<html><head><title>fuck</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
+<script src="dist/altspace.min.js"></script>
+</head><body><script>
 
-			UltimateLoader.load("models/elm1.obj", function(object)
-			{
-				//object.scale.set(1, 1, 1);
-				//object.position.set(0,0,0);
-			  
-				var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
-			  
-				object.traverse(function(child){
-				  child.userData.altspace = {collider:{enabled: false}};
-				});
+var scene = new THREE.Scene();
+var renderer = altspace.getThreeJSRenderer();
 
-				scene.add(object);
-			});
+//scene.scale.set(0.1,0.1,0.1);
 
-			function animate(){
-				requestAnimationFrame(animate);
-				renderer.render(scene);
-			};
- 
-            animate();
+UltimateLoader.load("models/elm1.obj", function(object)
+{
+	//object.scale.set(1, 1, 1);
+	//object.position.set(0,0,0);
+  
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+  
+	object.traverse(function(child){
+	  child.userData.altspace = {collider:{enabled: false}};
+	});
 
-        </script>
-    </body>
+	scene.add(object);
+});
+
+function animate(){
+	requestAnimationFrame(animate);
+	renderer.render(scene);
+};
+
+animate();
+
+</script>
+</body>
 </html>
