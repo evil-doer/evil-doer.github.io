@@ -16,7 +16,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
   
 	object.traverse(function(child){
-	  child.userData.altspace = {collider:{enabled: true}};
+	  child.userData.altspace = {collider:{enabled: false}};
 	});
 
 	scene.add(object);
