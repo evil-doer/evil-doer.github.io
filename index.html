@@ -13,9 +13,6 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	object.traverse(function(child) {
 		if(child instanceof THREE.Mesh) new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, child);
 	});
-Add Comment
-
-
 
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
