@@ -29,7 +29,9 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	  child.userData.altspace = {collider:{enabled: false}};
 	});
 	console.log(object);
-	object.visible = false;
+	//object.visible = false;
+	object.children[0].material.opacity = 0;
+	object.children[0].material.transparent = true;
 
 	scene.add(object);
 });
