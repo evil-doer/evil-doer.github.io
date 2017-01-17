@@ -9,18 +9,18 @@
 
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
-var e1m1 = new THREE.Group();
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(e1m1){
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 
-var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, e1m1);
+var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
-	e1m1.scale.set(0.8, 1, 0.8);
-	e1m1.traverse(function(child){
+	object.scale.set(0.8, 1, 0.8);
+	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
 	});
+	object.name = "e1m1";
 
-	scene.add(e1m1);
+	scene.add(object);
 });
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
@@ -33,7 +33,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	});
 	object.children[0].material.opacity = 0;
 	object.children[0].material.transparent = true;
-
+	object.name = "ramps";
 	scene.add(object);
 });
 
@@ -48,7 +48,7 @@ var collider = new NativeComponent('n-mesh-collider', {type: "environment", conv
     object.addEventListener('cursorup', function () {
         Door1()
     });
-	
+	object.name = "door1";
 	scene.add(object);
 });
 
