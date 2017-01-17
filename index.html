@@ -14,7 +14,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
   
 	//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
   
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
 
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
@@ -25,7 +25,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
 
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
 
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
