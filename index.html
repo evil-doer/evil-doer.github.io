@@ -13,7 +13,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	//object.scale.set(1, 1, 1);
 	//object.position.set(0,0,0);
   
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: true}, object.children[0]);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[1]);
   
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
