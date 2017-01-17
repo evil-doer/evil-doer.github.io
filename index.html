@@ -23,7 +23,18 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	});
 
 	scene.add(object);
+});
+
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
+	object.traverse(function(child) {
+		if(child instanceof THREE.Mesh) new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, child);
+	});
+
+	object.traverse(function(child){
+	  child.userData.altspace = {collider:{enabled: false}};
+	});
 	console.log(object);
+	scene.add(object);
 });
 
 function animate(){
