@@ -1,8 +1,8 @@
 # Blender MTL File: 'e1m1.blend'
-# Material Count: 55
+# Material Count: 56
 
 newmtl Material__1
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -10,10 +10,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\NUKAGE3.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\NUKAGE3.png
 
 newmtl Material__10
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -21,10 +21,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLAT20.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLAT20.png
 
 newmtl Material__11
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -32,10 +32,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR5_1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR5_1.png
 
 newmtl Material__12
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -43,10 +43,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\CEIL5_2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\CEIL5_2.png
 
 newmtl Material__13
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -54,10 +54,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BROWN1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BROWN1.png
 
 newmtl Material__14
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -65,10 +65,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\SUPPORT2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\SUPPORT2.png
 
 newmtl Material__15
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -76,10 +76,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\LITE3.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\LITE3.png
 
 newmtl Material__16
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -87,10 +87,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\CEIL3_5.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\CEIL3_5.png
 
 newmtl Material__17
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -98,10 +98,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\COMPTALL.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\COMPTALL.png
 
 newmtl Material__18
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -109,10 +109,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\COMPSPAN.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\COMPSPAN.png
 
 newmtl Material__19
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -120,10 +120,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STARGR1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STARGR1.png
 
 newmtl Material__2
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -131,10 +131,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BROWN144.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BROWN144.png
 
 newmtl Material__20
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -142,10 +142,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\COMPTILE.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\COMPTILE.png
 
 newmtl Material__21
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -153,10 +153,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STEP1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STEP1.png
 
 newmtl Material__22
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -164,10 +164,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\PLANET1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\PLANET1.png
 
 newmtl Material__23
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -175,10 +175,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TLITE6_5.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TLITE6_5.png
 
 newmtl Material__24
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -186,10 +186,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLAT14.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLAT14.png
 
 newmtl Material__25
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -197,10 +197,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLAT18.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLAT18.png
 
 newmtl Material__26
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -208,10 +208,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\COMPUTE2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\COMPUTE2.png
 
 newmtl Material__27
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -219,10 +219,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TLITE6_4.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TLITE6_4.png
 
 newmtl Material__28
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -230,10 +230,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STEP6.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STEP6.png
 
 newmtl Material__29
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -241,10 +241,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\DOOR2_5.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\DOOR2_5.png
 
 newmtl Material__3
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -252,10 +252,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR7_1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR7_1.png
 
 newmtl Material__30
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -263,10 +263,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\DOORTRAK.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\DOORTRAK.png
 
 newmtl Material__31
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -274,10 +274,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR7_2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR7_2.png
 
 newmtl Material__32
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -285,10 +285,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STARG3.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STARG3.png
 
 newmtl Material__33
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -296,10 +296,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\SLADWALL.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\SLADWALL.png
 
 newmtl Material__34
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -307,10 +307,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TEKWALL4.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TEKWALL4.png
 
 newmtl Material__35
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -318,10 +318,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\SW1COMP.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\SW1COMP.png
 
 newmtl Material__36
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -329,10 +329,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STEP2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STEP2.png
 
 newmtl Material__37
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -340,10 +340,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TLITE6_1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TLITE6_1.png
 
 newmtl Material__38
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -351,10 +351,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TEKWALL1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TEKWALL1.png
 
 newmtl Material__39
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -362,10 +362,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR1_1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR1_1.png
 
 newmtl Material__4
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -373,10 +373,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STARTAN3.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STARTAN3.png
 
 newmtl Material__40
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -384,10 +384,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR5_2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR5_2.png
 
 newmtl Material__41
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -395,10 +395,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BROWNGRN.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BROWNGRN.png
 
 newmtl Material__42
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -406,10 +406,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\NUKEDGE.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\NUKEDGE.png
 
 newmtl Material__43
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -417,10 +417,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR6_2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR6_2.png
 
 newmtl Material__44
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -428,10 +428,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BRNBIGL.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BRNBIGL.png
 
 newmtl Material__45
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -439,10 +439,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BRNBIGC.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BRNBIGC.png
 
 newmtl Material__46
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -450,10 +450,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BRNBIGR.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BRNBIGR.png
 
 newmtl Material__47
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -461,10 +461,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\STARTAN1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\STARTAN1.png
 
 newmtl Material__48
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -472,10 +472,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\EXITSIGN.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\EXITSIGN.png
 
 newmtl Material__49
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -483,10 +483,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLAT23.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLAT23.png
 
 newmtl Material__5
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -494,10 +494,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLOOR4_8.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLOOR4_8.png
 
 newmtl Material__50
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -505,10 +505,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\EXITDOOR.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\EXITDOOR.png
 
 newmtl Material__51
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -516,10 +516,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\SW1STRTN.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\SW1STRTN.png
 
 newmtl Material__52
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -527,10 +527,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\TLITE6_6.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\TLITE6_6.png
 
 newmtl Material__53
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -538,10 +538,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BIGDOOR2.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BIGDOOR2.png
 
 newmtl Material__54
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -549,10 +549,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BROWN96.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BROWN96.png
 
 newmtl Material__55
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -560,10 +560,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\BIGDOOR4.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\BIGDOOR4.png
 
 newmtl Material__6
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -571,10 +571,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\CEIL5_1.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\CEIL5_1.png
 
 newmtl Material__7
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -582,10 +582,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\COMPUTE3.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\COMPUTE3.png
 
 newmtl Material__8
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -593,10 +593,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\FLAT5_5.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\FLAT5_5.png
 
 newmtl Material__9
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -604,4 +604,12 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd e1m1\DOORSTOP.png
+map_Kd D:\Users\eric\Documents\GitHub\evil-doer.github.io\models\e1m1\DOORSTOP.png
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
