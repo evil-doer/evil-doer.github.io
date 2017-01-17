@@ -8,11 +8,11 @@
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(var object){
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 	//object.scale.set(1, 1, 1);
 	//object.position.set(0,0,0);
   
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[1]);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
   
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
