@@ -53,7 +53,7 @@ var collider = new NativeComponent('n-mesh-collider', {type: "environment", conv
 });
 
 function Door1(){
-	var door1 = scene.getObjectByName( "door1" );
+	var door1 = scene.getObjectByName("door1");
 	door1.position.y += 0.1;
 	requestAnimationFrame(Door1);
 	if(door1.position.y == 1.8)return;
