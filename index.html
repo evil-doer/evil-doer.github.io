@@ -8,7 +8,7 @@
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
 
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
 
