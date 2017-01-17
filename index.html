@@ -16,7 +16,7 @@ var collider = new NativeComponent('n-mesh-collider', {type: "environment", conv
 
 	object.scale.set(0.8, 1, 0.8);
 	object.traverse(function(child){
-	  child.userData.altspace = {collider:{enabled: false}};
+		child.userData.altspace = {collider:{enabled: false}};
 	});
 	object.name = "e1m1";
 
@@ -42,6 +42,9 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
 	object.scale.set(0.8, 1, 0.8);
+	object.traverse(function(child){
+		child.userData.altspace = {collider:{enabled: true}};
+	});
     object.addEventListener('cursorup', function () {
         Door1()
     });
