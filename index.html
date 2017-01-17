@@ -8,7 +8,7 @@
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
 
@@ -19,18 +19,18 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	scene.add(object);
 });
 
-//UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
-//
-//	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
 
-//	object.traverse(function(child){
-//	  child.userData.altspace = {collider:{enabled: false}};
-//	});
-//	console.log(object);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+
+	object.traverse(function(child){
+	  child.userData.altspace = {collider:{enabled: false}};
+	});
+	console.log(object);
 	//object.visible = false;
 
-//	scene.add(object);
-////});
+	scene.add(object);
+});
 
 function animate(){
 	requestAnimationFrame(animate);
