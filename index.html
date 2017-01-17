@@ -10,7 +10,12 @@ var renderer = altspace.getThreeJSRenderer();
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+	object.traverse(function(child) {
+		if(child instanceof THREE.Mesh) new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, child);
+	});
+Add Comment
+
+
 
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
@@ -27,7 +32,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	  child.userData.altspace = {collider:{enabled: false}};
 	});
 	console.log(object);
-	//object.visible = false;
+	object.visible = false;
 
 	scene.add(object);
 });
