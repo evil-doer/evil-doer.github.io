@@ -34,7 +34,6 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	object.children[0].material.opacity = 0;
 	object.children[0].material.transparent = true;
 	object.name = "ramps";
-	ramps = scene.getObjectByName( "ramps" );
 	scene.add(object);
 });
 
@@ -43,15 +42,19 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
 	object.scale.set(0.8, 1, 0.8);
-	object.traverse(function(child){
-	  child.userData.altspace = {collider:{enabled: false}};
-	});
     object.addEventListener('cursorup', function () {
         Door1()
     });
 	object.name = "door1";
 	scene.add(object);
 });
+
+function Door1(){
+	var door1 = scene.getObjectByName( "door1" );
+	door1.position.y += 0.1;
+	requestAnimationFrame(Door1);
+	if(door1.position.y == 1.8)return;
+};
 
 function animate(){
 	requestAnimationFrame(animate);
