@@ -37,17 +37,17 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	scene.add(object);
 });
 
-//UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(object){
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(object){
 
-//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
-//	object.scale.set(0.8, 1, 0.8);
-//    object.addEventListener('cursorup', function () {
-//        Door1()
-//    });
-//	object.name = "door1";
-//	scene.add(object);
-//});
+	object.scale.set(0.8, 1, 0.8);
+    object.addEventListener('cursorup', function () {
+        Door1()
+    });
+	object.name = "door1";
+	scene.add(object);
+});
 
 function Door1(){
 	var door1 = scene.getObjectByName( "door1" );
