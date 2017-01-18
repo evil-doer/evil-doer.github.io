@@ -1,25 +1,37 @@
 <html><head><title>E1M1</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-//<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
 <script src="dist/altspace.min.js"></script>
-<script src="dist/JSNativeComponents.js"></script>
-
+//<script src="dist/JSNativeComponents.js"></script>
 </head><body><script>
+
+// https://rawgit.com/evil-doer/evil-doer.github.io/master/
 
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
+var goingup1 = true;
+var goingup2 = true;
+var goingup3 = true;
+var goingup4 = true;
+var DoorUp = new Audio("DoorUp.WAV");
+var DoorDown = new Audio("DoorDown.WAV");
+var PlayUp = true;
+var PlayDown = true;
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 
 var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
-	object.scale.set(0.8, 1, 0.8);
+//	object.scale.set(0.8, 1, 0.8);
 	object.traverse(function(child){
 		child.userData.altspace = {collider:{enabled: false}};
 	});
 	object.name = "e1m1";
-
+	object.children[40].material.transparent = true;
+	object.children[41].material.transparent = true;
+	object.children[285].material.transparent = true;
+	
 	scene.add(object);
 });
 
@@ -27,7 +39,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
 
-	object.scale.set(0.8, 1, 0.8);
+//	object.scale.set(0.8, 1, 0.8);
 	object.traverse(function(child){
 	  child.userData.altspace = {collider:{enabled: false}};
 	});
@@ -39,24 +51,167 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(object){
 
-var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 
-	object.scale.set(0.8, 1, 0.8);
-	object.traverse(function(child){
-		child.userData.altspace = {collider:{enabled: true}};
-	});
+//	object.scale.set(0.8, 1, 0.8);
+//	object.position.set(0, 2.25, 0);
+//	object.traverse(function(child){
+//		child.userData.altspace = {collider:{enabled: true}};
+//	});
     object.addEventListener('cursorup', function () {
-        Door1()
-    });
+        DoorAction1()
+    });	
 	object.name = "door1";
 	scene.add(object);
 });
 
-function Door1(){
-	var door1 = scene.getObjectByName("door1");
-	door1.position.y += 0.1;
-	requestAnimationFrame(Door1);
-	if(door1.position.y == 1.8)return;
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door2.obj", function(object){
+
+//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+
+//	object.scale.set(0.8, 1, 0.8);
+//	object.position.set(0, 2.25, 0);
+//	object.traverse(function(child){
+//		child.userData.altspace = {collider:{enabled: true}};
+//	});
+    object.addEventListener('cursorup', function () {
+        DoorAction2()
+    });
+	object.name = "door2";
+	scene.add(object);
+});
+
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door3.obj", function(object){
+
+//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+
+//	object.scale.set(0.8, 1, 0.8);
+//	object.position.set(0, 2.25, 0);
+//	object.traverse(function(child){
+//		child.userData.altspace = {collider:{enabled: true}};
+//	});
+    object.addEventListener('cursorup', function () {
+        DoorAction3()
+    });
+	object.name = "door3";
+	scene.add(object);
+});
+
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door4.obj", function(object){
+
+//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+
+//	object.scale.set(0.8, 1, 0.8);
+//	object.position.set(0, 2.25, 0);
+//	object.traverse(function(child){
+//		child.userData.altspace = {collider:{enabled: true}};
+//	});
+    object.addEventListener('cursorup', function () {
+        DoorAction4()
+    });
+	object.name = "door4";
+	scene.add(object);
+});
+
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/wall.obj", function(object){
+
+var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+
+//	object.scale.set(0.8, 1, 0.8);
+	object.traverse(function(child){
+		child.userData.altspace = {collider:{enabled: true}};
+	});
+	object.children[0].material.opacity = 0.80;
+	object.children[0].material.transparent = true;  
+	object.name = "wall";
+	scene.add(object);
+});
+
+
+function DoorAction1(){
+	var door = scene.getObjectByName("door1");
+	if(goingup1){
+		if (PlayUp){
+			DoorUp.play();
+			PlayUp = false;
+		}
+		door.position.y += 0.05;
+		if(door.position.y >= 2.2){
+			PlayUp = true;
+			goingup1 = false;
+			return;
+		}
+		requestAnimationFrame(DoorAction1);
+	}else{
+		if (PlayDown){
+			DoorDown.play();
+			PlayDown = false;
+		}
+		door.position.y -= 0.05;
+		if(door.position.y <= 0.05){
+			PlayDown = true;
+			goingup1 = true;
+			return;
+		}
+		requestAnimationFrame(DoorAction1);
+	}
+};
+
+function DoorAction2(){
+	var door = scene.getObjectByName("door2");
+	if(goingup2){
+		door.position.y += 0.05;
+		if(door.position.y >= 2.2){
+			goingup2 = false;
+			return;
+		}
+		requestAnimationFrame(DoorAction2);
+	}else{
+		door.position.y -= 0.05;
+		if(door.position.y <= 0.05){
+			goingup2 = true;
+			return;
+		}
+		requestAnimationFrame(DoorAction2);
+	}
+};
+
+function DoorAction3(){
+	var door = scene.getObjectByName("door3");
+	if(goingup3){
+		door.position.y += 0.05;
+		if(door.position.y >= 2.2){
+			goingup3 = false;
+			return;
+		}
+		requestAnimationFrame(DoorAction3);
+	}else{
+		door.position.y -= 0.05;
+		if(door.position.y <= 0.05){
+			goingup3 = true;
+			return;
+		}
+		requestAnimationFrame(DoorAction3);
+	}
+};
+
+function DoorAction4(){
+	var door = scene.getObjectByName("door4");
+	if(goingup4){
+		door.position.y += 0.05;
+		if(door.position.y >= 2.2){
+			goingup4 = false;
+			return;
+		}
+		requestAnimationFrame(DoorAction4);
+	}else{
+		door.position.y -= 0.05;
+		if(door.position.y <= 0.05){
+			goingup4 = true;
+			return;
+		}
+		requestAnimationFrame(DoorAction4);
+	}
 };
 
 function animate(){
