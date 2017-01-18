@@ -10,133 +10,59 @@
 
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer();
-var goingup1 = true;
-var goingup2 = true;
-var goingup3 = true;
-var goingup4 = true;
+var goingup1 = goingup2 = goingup3 = goingup4 = PlayUp = PlayDown = true;
 var DoorUp = new Audio("DoorUp.WAV");
 var DoorDown = new Audio("DoorDown.WAV");
-var PlayUp = true;
-var PlayDown = true;
+var root = new THREE.Object3D();
+scene.add(root);
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
+// PLANE ELEVATOR
+var geometry = new THREE.PlaneGeometry(10, 10);
+var material = new THREE.MeshBasicMaterial({color: 0xff0000});
+var plane = new THREE.Mesh(geometry, material);
+plane.rotation.x = THREE.Math.degToRad(-90);
+plane.position.y = 1;
+collider = new NativeComponent('n-box-collider', {radius: 1}, plane).addTo(root);
+scene.add(plane); 
 
-var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+var plane1 = plane.clone();
+plane1.position.y = 2;
+collider = new NativeComponent('n-box-collider', {radius: 1}, plane1).addTo(root);
 
-//	object.scale.set(0.8, 1, 0.8);
-	object.traverse(function(child){
-		child.userData.altspace = {collider:{enabled: false}};
-	});
-	object.name = "e1m1";
-	object.children[40].material.transparent = true;
-	object.children[41].material.transparent = true;
-	object.children[285].material.transparent = true;
-	
-	scene.add(object);
-});
+var plane2 = plane.clone();
+plane2.position.y = 3;
+collider = new NativeComponent('n-box-collider', {radius: 1}, plane2).addTo(root);
 
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
+var plane3 = plane.clone();
+plane3.position.y = 4;
+collider = new NativeComponent('n-box-collider', {radius: 1}, plane3).addTo(root);
 
-	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+var plane4 = plane.clone();
+plane4.position.y = 5;
+collider = new NativeComponent('n-box-collider', {radius: 1}, plane4).addTo(root);
 
-//	object.scale.set(0.8, 1, 0.8);
-	object.traverse(function(child){
-	  child.userData.altspace = {collider:{enabled: false}};
-	});
-	object.children[0].material.opacity = 0;
-	object.children[0].material.transparent = true;
-	object.name = "ramps";
-	scene.add(object);
-});
-
+// DOOR 1 TRIGGER
+var geometry = new THREE.BoxGeometry(0.7128, 3.92445, 5.7078); // original 0.528, 2.907, 4.228 - multiply by 1.35 to be clickable
+var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+var door1 = new THREE.Mesh(geometry, material);
+door1.position.set(16.12228, 6.48208, -37.43868);
+door1.addEventListener("cursorup", function(){DoorAction1()});	
+scene.add(door1);
+//DOOR 1 OBJ
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(object){
-
-//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
-
-//	object.scale.set(0.8, 1, 0.8);
-//	object.position.set(0, 2.25, 0);
-//	object.traverse(function(child){
-//		child.userData.altspace = {collider:{enabled: true}};
-//	});
-    object.addEventListener('cursorup', function () {
-        DoorAction1()
-    });	
-	object.name = "door1";
-	scene.add(object);
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	object.position.set(-16.12228, -6.48208, 37.43868);
+	door1.add(object);
 });
-
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door2.obj", function(object){
-
-//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
-
-//	object.scale.set(0.8, 1, 0.8);
-//	object.position.set(0, 2.25, 0);
-//	object.traverse(function(child){
-//		child.userData.altspace = {collider:{enabled: true}};
-//	});
-    object.addEventListener('cursorup', function () {
-        DoorAction2()
-    });
-	object.name = "door2";
-	scene.add(object);
-});
-
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door3.obj", function(object){
-
-//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
-
-//	object.scale.set(0.8, 1, 0.8);
-//	object.position.set(0, 2.25, 0);
-//	object.traverse(function(child){
-//		child.userData.altspace = {collider:{enabled: true}};
-//	});
-    object.addEventListener('cursorup', function () {
-        DoorAction3()
-    });
-	object.name = "door3";
-	scene.add(object);
-});
-
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door4.obj", function(object){
-
-//var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
-
-//	object.scale.set(0.8, 1, 0.8);
-//	object.position.set(0, 2.25, 0);
-//	object.traverse(function(child){
-//		child.userData.altspace = {collider:{enabled: true}};
-//	});
-    object.addEventListener('cursorup', function () {
-        DoorAction4()
-    });
-	object.name = "door4";
-	scene.add(object);
-});
-
-UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/wall.obj", function(object){
-
-var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
-
-//	object.scale.set(0.8, 1, 0.8);
-	object.traverse(function(child){
-		child.userData.altspace = {collider:{enabled: true}};
-	});
-	object.children[0].material.opacity = 0.80;
-	object.children[0].material.transparent = true;  
-	object.name = "wall";
-	scene.add(object);
-});
-
-
+// DOOR 1 ACTION
 function DoorAction1(){
-	var door = scene.getObjectByName("door1");
 	if(goingup1){
 		if (PlayUp){
 			DoorUp.play();
 			PlayUp = false;
 		}
-		door.position.y += 0.05;
-		if(door.position.y >= 2.2){
+		door1.position.y += 0.05;
+		if(door1.position.y >= 8.7){
 			PlayUp = true;
 			goingup1 = false;
 			return;
@@ -147,8 +73,8 @@ function DoorAction1(){
 			DoorDown.play();
 			PlayDown = false;
 		}
-		door.position.y -= 0.05;
-		if(door.position.y <= 0.05){
+		door1.position.y -= 0.05;
+		if(door1.position.y <= 6.53208){
 			PlayDown = true;
 			goingup1 = true;
 			return;
@@ -157,18 +83,43 @@ function DoorAction1(){
 	}
 };
 
+// DOOR 2 TRIGGER
+var geometry = new THREE.BoxGeometry(1.42695, 8.91945, 5.7078); // original 1.057 6.607 4.228 - multiply by 1.35 to be clickable
+var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+var door2 = new THREE.Mesh(geometry, material);
+door2.position.set(61.84377, 7.5391, 6.96133);
+door2.addEventListener('cursorup', function () {
+   DoorAction2()
+});	
+scene.add(door2);
+//DOOR 2 OBJ
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door2.obj", function(object){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	object.position.set(-61.84377, -7.5391, -6.96133);
+	door2.add(object);
+});
+// DOOR 2 ACTION
 function DoorAction2(){
-	var door = scene.getObjectByName("door2");
 	if(goingup2){
-		door.position.y += 0.05;
-		if(door.position.y >= 2.2){
+		if (PlayUp){
+			DoorUp.play();
+			PlayUp = false;
+		}
+		door2.position.y += 0.05;
+		if(door2.position.y >= 9.7391){
+			PlayUp = true;
 			goingup2 = false;
 			return;
 		}
 		requestAnimationFrame(DoorAction2);
 	}else{
-		door.position.y -= 0.05;
-		if(door.position.y <= 0.05){
+		if (PlayDown){
+			DoorDown.play();
+			PlayDown = false;
+		}
+		door2.position.y -= 0.05;
+		if(door2.position.y <= 7.5891){
+			PlayDown = true;
 			goingup2 = true;
 			return;
 		}
@@ -176,18 +127,43 @@ function DoorAction2(){
 	}
 };
 
+// DOOR 3 TRIGGER
+var geometry = new THREE.BoxGeometry(5.70915, 3.21165, 0.71415); // original 4.229 2.379 0.529 - multiply by 1.35 to be clickable
+var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+var door3 = new THREE.Mesh(geometry, material);
+door3.position.set(64.48676, 5.4251, 13.03983);
+door3.addEventListener('cursorup', function () {
+   DoorAction3()
+});	
+scene.add(door3);
+//DOOR 3 OBJ
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door3.obj", function(object){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	object.position.set(-64.48676, -5.4251, -13.03983);
+	door3.add(object);
+});
+// DOOR 3 ACTION
 function DoorAction3(){
-	var door = scene.getObjectByName("door3");
 	if(goingup3){
-		door.position.y += 0.05;
-		if(door.position.y >= 2.2){
+		if (PlayUp){
+			DoorUp.play();
+			PlayUp = false;
+		}
+		door3.position.y += 0.05;
+		if(door3.position.y >= 7.6251){
+			PlayUp = true;
 			goingup3 = false;
 			return;
 		}
 		requestAnimationFrame(DoorAction3);
 	}else{
-		door.position.y -= 0.05;
-		if(door.position.y <= 0.05){
+		if (PlayDown){
+			DoorDown.play();
+			PlayDown = false;
+		}
+		door3.position.y -= 0.05;
+		if(door3.position.y <= 5.4751){
+			PlayDown = true;
 			goingup3 = true;
 			return;
 		}
@@ -195,18 +171,43 @@ function DoorAction3(){
 	}
 };
 
+// DOOR 4 TRIGGER
+var geometry = new THREE.BoxGeometry(2.85525, 3.21165, 0.71415); // original 2.115 2.379 0.529 - multiply by 1.35 to be clickable
+var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+var door4 = new THREE.Mesh(geometry, material);
+door4.position.set(64.48676, 5.42511, 33.38983);
+door4.addEventListener('cursorup', function () {
+   DoorAction4()
+});	
+scene.add(door4);
+//DOOR 4 OBJ
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door4.obj", function(object){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	object.position.set(-64.48676, -5.42511, -33.38983);
+	door4.add(object);
+});
+// DOOR 4 ACTION
 function DoorAction4(){
-	var door = scene.getObjectByName("door4");
 	if(goingup4){
-		door.position.y += 0.05;
-		if(door.position.y >= 2.2){
+		if (PlayUp){
+			DoorUp.play();
+			PlayUp = false;
+		}
+		door4.position.y += 0.05;
+		if(door4.position.y >= 7.62511){
+			PlayUp = true;
 			goingup4 = false;
 			return;
 		}
 		requestAnimationFrame(DoorAction4);
 	}else{
-		door.position.y -= 0.05;
-		if(door.position.y <= 0.05){
+		if (PlayDown){
+			DoorDown.play();
+			PlayDown = false;
+		}
+		door4.position.y -= 0.05;
+		if(door4.position.y <= 5.47511){
+			PlayDown = true;
 			goingup4 = true;
 			return;
 		}
@@ -214,6 +215,51 @@ function DoorAction4(){
 	}
 };
 
+// SKY SPHERE
+var loader = new THREE.TextureLoader();
+loader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/SKY1.png", function(texture){
+	var geometry = new THREE.SphereGeometry(2000, 32, 32); 
+	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide, transparent: false, opacity: 1});
+	sky = new THREE.Mesh(geometry, material);
+	scene.add(sky);
+});
+	
+// MAIN LEVEL
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
+	object.traverse(function(child){
+		child.userData.altspace = {collider:{enabled: false}};
+	});
+	object.name = "e1m1";
+	object.children[40].material.transparent = true;
+	object.children[41].material.transparent = true;
+	object.children[285].material.transparent = true;
+	scene.add(object);
+});
+
+// COLLISION RAMPS
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object.children[0]);
+	object.traverse(function(child){
+	  child.userData.altspace = {collider:{enabled: false}};
+	});
+	object.children[0].material.opacity = 0;
+	object.children[0].material.transparent = true;
+	object.name = "ramps";
+	scene.add(object);
+});
+
+// TRANSPARENT WALL
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/wall.obj", function(object){
+	object.traverse(function(child){
+		child.userData.altspace = {collider:{enabled: true}};
+	});
+	object.children[0].material.opacity = 0.8;
+	object.children[0].material.transparent = true;
+	scene.add(object);
+});
+
+//ANIMATION LOOP
 function animate(){
 	requestAnimationFrame(animate);
 	renderer.render(scene);
