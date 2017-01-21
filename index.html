@@ -17,6 +17,8 @@ var root = new THREE.Object3D();
 var slime;
 var timer = new Date().getTime();
 var frame = 1;
+var angle = 0;
+var e1m1Group;
 scene.add(root);
 
 // SKY SPHERE
@@ -57,21 +59,99 @@ collider = new NativeComponent('n-box-collider', {radius: 1}, plane4).addTo(root
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 	object.traverse(function(child){
-		child.userData.altspace = {collider:{enabled: false}};
-	});
-	object.traverse(function(child){
-		if(child.name == "Object__221" || child.name == "Object__222" || child.name == "Object__223"){
-			child.material.transparent = true;
+		child.userData.altspace = {collider:{enabled: false}}; //CURSOR REMOVAL
+
+		if(child.name =="Object__218"){
+			endGlowFloor = child.material.clone();
+			child.material = endGlowFloor;
+		}
+		if(child.name =="Object__220"){
+			endGlowWalls = child.material.clone();
+			child.material = endGlowWalls;
+		}
+		if(child.name =="Object__219"){
+			endGlowCeiling = child.material.clone();
+			child.material = endGlowCeiling;
+		}
+		if(child.name =="Object__221"){
+			fenceL = child.material.clone();
+			child.material = fenceL;
+			fenceL.transparent = true;
+		}
+		if(child.name =="Object__222"){
+			fenceM = child.material.clone();
+			child.material = fenceM;
+			fenceM.transparent = true;
+		}
+		if(child.name =="Object__223"){
+			fenceR = child.material.clone();
+			child.material = fenceR;
+			fenceR.transparent = true;
+		}
+		if(child.name =="Object__122"){
+			leftColFloor = child.material.clone();
+			child.material = leftColFloor;
+		}
+		if(child.name =="Object__123"){
+			leftColCeiling = child.material.clone();
+			child.material = leftColCeiling;
+		}
+		if(child.name =="Object__124"){
+			rightColFloor = child.material.clone();
+			child.material = rightColFloor;
+		}
+		if(child.name =="Object__125"){
+			rightColCeiling = child.material.clone();
+			child.material = rightColCeiling;
+		}
+		if(child.name =="Object__99"){
+			spawnFloor = child.material.clone();
+			child.material = spawnFloor;
+		}
+		if(child.name =="Object__102"){
+			spawnWalls = child.material.clone();
+			child.material = spawnWalls;
+		}
+		if(child.name =="Object__101"){
+			spawnDoor = child.material.clone();
+			child.material = spawnDoor;
+		}
+		if(child.name =="Object__100"){
+			spawnCeiling = child.material.clone();
+			child.material = spawnCeiling;
 		}
 	});
+	e1m1Group = object;
+	darken();
 	scene.add(object);
-	
-	object.traverse(function(child){
-		if(child.name == "Object__1"){
-			child.material.map.repeat.x = 1/3;
-		}
-	});
 });
+
+//DARKEN SECTORS
+function darken(){
+	var array = [[139, 192],[137,192],[142,192],[141,192],[157,176],[160,176],[159,176],[111,128],[109,128],[163,144],[161,144],[132,144],
+		[129,144],[126,144],[119,144],[116,144],[113,128],[134,144],[131,144],[128,144],[121,144],[118,144],[112,144],[103,128],[105,128],
+		[107,128],[108,128],[95,144],[98,144],[97,144],[85,224],[88,224],[87,224],[89,224],[90,192],[93,192],[94,192],[79,144],[81,144],
+		[72,160],[74,160],[46,128],[52,128],[48,128],[49,128],[51,128],[50,128],[208,160],[210,160],[211,160],[169,160],[171,160],
+		[164,144],[167,144],[168,144],[166,144],[190,192],[192,192],[182,192],[181,192],[195,192],[175,144],[176,144],[178,144],[187,160],
+		[189,160],[280,128],[282,128],[299,128],[279,128],[298,128],[277,128],[224,128],[226,128],[296,144],[296,144],[260,128],[263,128],
+		[265,128],[262,128],[257,128],[259,128],[254,128],[256,128],[251,128],[253,128],[248,128],[250,128],[274,128],[276,128],[270,128],
+		[273,128],[272,128],[17,128],[17,128],[19,128],[20,128],[21,128],[23,128],[24,128],[26,128],[27,128],[29,128],[30,128],[32,128],[38,176],
+		[41,176],[40,176],[138,192],[150,192],[140,192],[149,192],[158,176],[110,128],[162,144],[133,144],[130,144],[120,144],[127,144],
+		[117,144],[104,128],[96,144],[86,192],[80,144],[73,160],[47,128],[209,160],[170,160],[165,144],[191,192],[194,192],[180,192],
+		[173,144],[177,144],[188,160],[178,128],[181,128],[225,128],[264,128],[261,128],[258,128],[255,128],[252,128],[275,128],[249,128],
+		[271,128],[18,128],[22,128],[25,128],[28,128],[31,128],[39,176],[114,128],[115,128],[197,144]];
+
+	for(i=0; i < array.length; i++){
+		e1m1Group.traverse(function(child){	
+			if(child.name == "Object__" + array[i][0]){
+				array[i][0] = child.material.clone();
+				child.material = array[i][0];
+				array[i][0].color = new THREE.Color(array[i][1]/256, array[i][1]/256, array[i][1]/256);
+			};
+		});
+	}
+};
+
 
 //SLIME LAYER
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/slime.obj", function(object){
@@ -95,6 +175,8 @@ scene.add(door1);
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(object){
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 	object.position.set(-16.12228, -6.48208, 37.43868);
+	object.children[0].material.color = new THREE.Color(208/256, 208/256, 208/256);
+	object.children[1].material.color = new THREE.Color(208/256, 208/256, 208/256);
 	door1.add(object);
 });
 // DOOR 1 ACTION
@@ -139,6 +221,8 @@ scene.add(door2);
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door2.obj", function(object){
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 	object.position.set(-61.84377, -7.5391, -6.96133);
+	object.children[0].material.color = new THREE.Color(144/256, 144/256, 144/256);
+	object.children[1].material.color = new THREE.Color(144/256, 144/256, 144/256);
 	door2.add(object);
 });
 // DOOR 2 ACTION
@@ -183,6 +267,8 @@ scene.add(door3);
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door3.obj", function(object){
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 	object.position.set(-64.48676, -5.4251, -13.03983);
+	object.children[0].material.color = new THREE.Color(228/256, 228/256, 228/256);
+	object.children[1].material.color = new THREE.Color(228/256, 228/256, 228/256);
 	door3.add(object);
 });
 // DOOR 3 ACTION
@@ -276,6 +362,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	});
 	object.children[0].material.opacity = 0.8;
 	object.children[0].material.transparent = true;
+	object.children[0].material.color = new THREE.Color(192/256, 192/256, 192/256);
 	scene.add(object);
 });
 
@@ -283,8 +370,42 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function animate(){
 	requestAnimationFrame(animate);
 	renderer.render(scene);
-
 	curTime = new Date().getTime();
+	glowState = 0.5+0.5*Math.cos(angle += .1);
+
+	leftColFloor.color = new THREE.Color(glowState, glowState, glowState);
+	leftColCeiling.color = new THREE.Color(glowState, glowState, glowState);
+	rightColFloor.color = new THREE.Color(glowState, glowState, glowState);
+	rightColCeiling.color = new THREE.Color(glowState, glowState, glowState);
+	
+	if(String(curTime).charAt(10) == "0"){
+		endGlowFloor.color = new THREE.Color(1, 1, 1);
+		endGlowWalls.color = new THREE.Color(1, 1, 1);
+		endGlowCeiling.color = new THREE.Color(1, 1, 1);
+		fenceL.color = new THREE.Color(1, 1, 1);
+		fenceM.color = new THREE.Color(1, 1, 1);
+		fenceR.color = new THREE.Color(1, 1, 1);	
+	}else{
+		endGlowFloor.color = new THREE.Color(0.5, 0.5, 0.5);
+		endGlowWalls.color = new THREE.Color(0.5, 0.5, 0.5);
+		endGlowCeiling.color = new THREE.Color(0.5, 0.5, 0.5);
+		fenceL.color = new THREE.Color(0.5, 0.5, 0.5);
+		fenceM.color = new THREE.Color(0.5, 0.5, 0.5);
+		fenceR.color = new THREE.Color(0.5, 0.5, 0.5);
+	};
+	
+	if(String(curTime).charAt(12) == "0"){
+		spawnFloor.color = new THREE.Color(1, 1, 1);
+		spawnWalls.color = new THREE.Color(1, 1, 1);
+		spawnDoor.color = new THREE.Color(1, 1, 1);
+		spawnCeiling.color = new THREE.Color(1, 1, 1);
+	}else{
+		spawnFloor.color = new THREE.Color(0.5625, 0.5625, 0.5625);
+		spawnWalls.color = new THREE.Color(0.5625, 0.5625, 0.5625);
+		spawnDoor.color = new THREE.Color(0.5625, 0.5625, 0.5625);
+		spawnCeiling.color = new THREE.Color(0.5625, 0.5625, 0.5625);
+	};
+
 	if(frame==1){
 		slime.children[0].material.map.offset.x = 0;
 		if(curTime > timer + 300){
@@ -305,7 +426,6 @@ function animate(){
 		};
 	};
 };
-
 
 animate();
 
