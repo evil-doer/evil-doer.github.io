@@ -448,7 +448,7 @@ function animate(){
 	curTime = new Date().getTime();
 	glowState = 0.75+0.25*Math.cos(angle += .1);
 	
-	scene.scale.set(3+2*Math.cos(angle2 += 0.005), 1, 3+2*Math.cos(angle2));
+	//scene.scale.set(3+2*Math.cos(angle2 += 0.005), 1, 3+2*Math.cos(angle2));
 
 	leftColFloor.color = new THREE.Color(glowState, glowState, glowState);
 	leftColCeiling.color = new THREE.Color(glowState, glowState, glowState);
