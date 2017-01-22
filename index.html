@@ -3,7 +3,6 @@
 <script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
 <script src="dist/altspace.min.js"></script>
-
 </head><body><script>
 
 // https://rawgit.com/evil-doer/evil-doer.github.io/master/
@@ -15,17 +14,12 @@ altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
 	headTrack = skeleton.getJoint("Head");
 });
 var goingup1 = goingup2 = goingup3 = goingup4 = PlayUp = PlayDown = true;
-var DoorUp = new Audio("DoorUp.WAV");
-DoorUp.volume = 0.1;
-var DoorDown = new Audio("DoorDown.WAV");
-DoorDown.volume = 0.1;
 var root = new THREE.Object3D();
 var slime;
 var timer = new Date().getTime();
 var frame = 1;
 var angle = 0;
 var e1m1Group;
-var dummyPosition = new THREE.Vector3();
 var angle2 = 1;
 scene.add(root);
 
@@ -185,13 +179,30 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	object.position.set(-16.12228, -6.48208, 37.43868);
 	object.children[0].material.color = new THREE.Color(208/256, 208/256, 208/256);
 	object.children[1].material.color = new THREE.Color(208/256, 208/256, 208/256);
+
 	door1.add(object);
+			
+	DoorUpSound = new NativeComponent('n-sound', {
+		src: "DoorUp.ogg",
+		oneshot: true,
+		volume: 0.5,
+	}).addTo(door1, function(obj){
+	//
+	});
+	
+	DoorDownSound = new NativeComponent('n-sound', {
+		src: "DoorDown.ogg",
+		oneshot: true,
+		volume: 0.5,
+	}).addTo(door1, function(obj){
+	//
+	});
 });
 // DOOR 1 ACTION
 function DoorAction1(){
 	if(goingup1){
 		if (PlayUp){
-			DoorUp.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door1);
 			PlayUp = false;
 		}
 		door1.position.y += 0.05;
@@ -203,7 +214,7 @@ function DoorAction1(){
 		requestAnimationFrame(DoorAction1);
 	}else{
 		if (PlayDown){
-			DoorDown.play();
+			DoorDownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door1);
 			PlayDown = false;
 		}
 		door1.position.y -= 0.05;
@@ -237,7 +248,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction2(){
 	if(goingup2){
 		if (PlayUp){
-			DoorUp.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door2);
 			PlayUp = false;
 		}
 		door2.position.y += 0.05;
@@ -249,7 +260,7 @@ function DoorAction2(){
 		requestAnimationFrame(DoorAction2);
 	}else{
 		if (PlayDown){
-			DoorDown.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door2);
 			PlayDown = false;
 		}
 		door2.position.y -= 0.05;
@@ -283,7 +294,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction3(){
 	if(goingup3){
 		if (PlayUp){
-			DoorUp.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door3);
 			PlayUp = false;
 		}
 		door3.position.y += 0.05;
@@ -295,7 +306,7 @@ function DoorAction3(){
 		requestAnimationFrame(DoorAction3);
 	}else{
 		if (PlayDown){
-			DoorDown.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door3);
 			PlayDown = false;
 		}
 		door3.position.y -= 0.05;
@@ -327,7 +338,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction4(){
 	if(goingup4){
 		if (PlayUp){
-			DoorUp.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door4);
 			PlayUp = false;
 		}
 		door4.position.y += 0.05;
@@ -339,7 +350,7 @@ function DoorAction4(){
 		requestAnimationFrame(DoorAction4);
 	}else{
 		if (PlayDown){
-			DoorDown.play();
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door4);
 			PlayDown = false;
 		}
 		door4.position.y -= 0.05;
@@ -401,16 +412,14 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	lamp6.position.set(68.01082 , 5, 17.91993);
 	lamp7.position.set(54.67568 , 5, 23.95352);
 	lamp8.position.set(74.26427 , 5, 23.95352);
-	scene.add(lamp1);
-	scene.add(lamp2);
-	scene.add(lamp3);
-	scene.add(lamp4);
-	scene.add(lamp5);
-	scene.add(lamp6);
-	scene.add(lamp5);
-	scene.add(lamp6);
-	scene.add(lamp7);
-	scene.add(lamp8);
+	var lamp1Board = new NativeComponent('n-billboard', null, lamp1).addTo(root);
+	var lamp2Board = new NativeComponent('n-billboard', null, lamp2).addTo(root);
+	var lamp3Board = new NativeComponent('n-billboard', null, lamp3).addTo(root);
+	var lamp4Board = new NativeComponent('n-billboard', null, lamp4).addTo(root);
+	var lamp5Board = new NativeComponent('n-billboard', null, lamp5).addTo(root);
+	var lamp6Board = new NativeComponent('n-billboard', null, lamp6).addTo(root);
+	var lamp7Board = new NativeComponent('n-billboard', null, lamp7).addTo(root);
+	var lamp8Board = new NativeComponent('n-billboard', null, lamp8).addTo(root);
 });
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/ELECA0.png", function(texture){
@@ -422,8 +431,8 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	column2 = column1.clone();
 	column1.position.set(-25.37073 ,8.6, -17.3527);
 	column2.position.set(-25.37073 ,8.6, -8.89570);
-	scene.add(column1);
-	scene.add(column2);
+	var column1Board = new NativeComponent('n-billboard', null, column1).addTo(root);
+	var column2Board = new NativeComponent('n-billboard', null, column2).addTo(root);
 });
 
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/CBRAA0.png", function(texture){
@@ -435,8 +444,8 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 	candelabra2 = candelabra1.clone();
 	candelabra1.position.set(61.81361 ,5.2, 29.73551);
 	candelabra2.position.set(67.1118 ,5.2, 29.73551);
-	scene.add(candelabra1);
-	scene.add(candelabra2);
+	var candelabra1Board = new NativeComponent('n-billboard', null, candelabra1).addTo(root);
+	var candelabra2Board = new NativeComponent('n-billboard', null, candelabra2).addTo(root);
 });
 
 
@@ -504,24 +513,7 @@ function animate(){
 	};
 	column1.material.color = new THREE.Color(glowState, glowState, glowState);
 	column2.material.color = new THREE.Color(glowState, glowState, glowState);
-	dummyPosition.copy(headTrack.position);
-	dummyPosition.y = column1.position.y
-	column1.lookAt(dummyPosition);
-	column2.lookAt(dummyPosition);
 
-	dummyPosition.y = lamp1.position.y
-	lamp1.lookAt(dummyPosition);
-	lamp2.lookAt(dummyPosition);
-	dummyPosition.y = lamp3.position.y
-	lamp3.lookAt(dummyPosition);
-	lamp4.lookAt(dummyPosition);
-	lamp5.lookAt(dummyPosition);
-	lamp6.lookAt(dummyPosition);
-	lamp7.lookAt(dummyPosition);
-	lamp8.lookAt(dummyPosition);
-	dummyPosition.y = candelabra1.position.y
-	candelabra1.lookAt(dummyPosition);
-	candelabra2.lookAt(dummyPosition);
 };
 
 animate();
