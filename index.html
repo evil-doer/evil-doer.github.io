@@ -371,7 +371,7 @@ function DoorAction4(){
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/ramps.obj", function(object){
 	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, object);
 	object.traverse(function(child){
-	  child.userData.altspace = {collider:{enabled: false}};
+	  child.userData.altspace = {collider:{enabled: true}};
 	});
 	object.children[0].material.opacity = 0;
 	object.children[0].material.transparent = true;
