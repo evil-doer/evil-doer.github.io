@@ -122,6 +122,10 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 			spawnCeiling = child.material.clone();
 			child.material = spawnCeiling;
 		}
+		if(child.name =="Object__140"){
+			spinnyThing = child.material.clone();
+			child.material = spinnyThing;
+		}
 	});
 	e1m1Group = object;
 	darken();
@@ -141,7 +145,7 @@ function darken(){
 		[41,176],[40,176],[138,192],[150,192],[140,192],[149,192],[158,176],[110,128],[162,144],[133,144],[130,144],[120,144],[127,144],
 		[117,144],[104,128],[96,144],[86,192],[80,144],[73,160],[47,128],[209,160],[170,160],[165,144],[191,192],[194,192],[180,192],
 		[173,144],[177,144],[188,160],[178,128],[181,128],[225,128],[264,128],[261,128],[258,128],[255,128],[252,128],[275,128],[249,128],
-		[271,128],[18,128],[22,128],[25,128],[28,128],[31,128],[39,176],[114,128],[115,128],[197,144]];
+		[271,128],[18,128],[22,128],[25,128],[28,128],[31,128],[39,176],[114,128],[115,128],[197,144],[174,144]];
 
 	for(i=0; i < array.length; i++){
 		e1m1Group.traverse(function(child){	
@@ -202,7 +206,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction1(){
 	if(goingup1){
 		if (PlayUp){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door1);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door1);
 			PlayUp = false;
 		}
 		door1.position.y += 0.05;
@@ -214,7 +218,7 @@ function DoorAction1(){
 		requestAnimationFrame(DoorAction1);
 	}else{
 		if (PlayDown){
-			DoorDownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door1);
+			DoorDownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door1);
 			PlayDown = false;
 		}
 		door1.position.y -= 0.05;
@@ -248,7 +252,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction2(){
 	if(goingup2){
 		if (PlayUp){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door2);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door2);
 			PlayUp = false;
 		}
 		door2.position.y += 0.05;
@@ -260,7 +264,7 @@ function DoorAction2(){
 		requestAnimationFrame(DoorAction2);
 	}else{
 		if (PlayDown){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door2);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door2);
 			PlayDown = false;
 		}
 		door2.position.y -= 0.05;
@@ -294,7 +298,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction3(){
 	if(goingup3){
 		if (PlayUp){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door3);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door3);
 			PlayUp = false;
 		}
 		door3.position.y += 0.05;
@@ -306,7 +310,7 @@ function DoorAction3(){
 		requestAnimationFrame(DoorAction3);
 	}else{
 		if (PlayDown){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door3);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door3);
 			PlayDown = false;
 		}
 		door3.position.y -= 0.05;
@@ -338,7 +342,7 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 function DoorAction4(){
 	if(goingup4){
 		if (PlayUp){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, volume: 1}).addTo(door4);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door4);
 			PlayUp = false;
 		}
 		door4.position.y += 0.05;
@@ -350,7 +354,7 @@ function DoorAction4(){
 		requestAnimationFrame(DoorAction4);
 	}else{
 		if (PlayDown){
-			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, volume: 1}).addTo(door4);
+			DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door4);
 			PlayDown = false;
 		}
 		door4.position.y -= 0.05;
@@ -511,6 +515,8 @@ function animate(){
 			frame = 1;
 		};
 	};
+	spinnyThing.map.offset.x += 0.005;
+	
 	column1.material.color = new THREE.Color(glowState, glowState, glowState);
 	column2.material.color = new THREE.Color(glowState, glowState, glowState);
 
