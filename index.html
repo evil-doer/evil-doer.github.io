@@ -32,30 +32,31 @@ loader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/SKY1
 	scene.add(sky);
 });
 
-// PLANE ELEVATOR
-var geometry = new THREE.PlaneGeometry(10, 10);
-var material = new THREE.MeshBasicMaterial({color: 0xff0000});
-var plane = new THREE.Mesh(geometry, material);
-plane.rotation.x = THREE.Math.degToRad(-90);
-plane.position.y = 1;
-collider = new NativeComponent('n-box-collider', {radius: 1}, plane).addTo(root);
-scene.add(plane); 
+UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/plane.obj", function(plane){
+	var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, plane);
+	plane.position.set(0, 1, 5);
+	plane.children[0].material.opacity = 0.5;
+	plane.children[0].material.transparent = true;
+	plane.rotation.x = THREE.Math.degToRad(-90);
+	plane.scale.multiplyScalar(5);
+	scene.add(plane);
 
 var plane1 = plane.clone();
 plane1.position.y = 2;
-collider = new NativeComponent('n-box-collider', {radius: 1}, plane1).addTo(root);
+collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, plane1).addTo(root);
 
 var plane2 = plane.clone();
 plane2.position.y = 3;
-collider = new NativeComponent('n-box-collider', {radius: 1}, plane2).addTo(root);
+collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, plane2).addTo(root);
 
 var plane3 = plane.clone();
 plane3.position.y = 4;
-collider = new NativeComponent('n-box-collider', {radius: 1}, plane3).addTo(root);
+collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, plane3).addTo(root);
 
 var plane4 = plane.clone();
 plane4.position.y = 5;
-collider = new NativeComponent('n-box-collider', {radius: 1}, plane4).addTo(root);
+collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, plane4).addTo(root);
+});
 
 // MAIN LEVEL
 UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1.obj", function(object){
@@ -76,19 +77,9 @@ UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/mod
 			child.material = endGlowCeiling;
 		}
 		if(child.name =="Object__221"){
-			fenceL = child.material.clone();
-			child.material = fenceL;
-			fenceL.transparent = true;
-		}
-		if(child.name =="Object__222"){
-			fenceM = child.material.clone();
-			child.material = fenceM;
-			fenceM.transparent = true;
-		}
-		if(child.name =="Object__223"){
-			fenceR = child.material.clone();
-			child.material = fenceR;
-			fenceR.transparent = true;
+			fence = child.material.clone();
+			child.material = fence;
+			fence.transparent = true;
 		}
 		if(child.name =="Object__122"){
 			leftColFloor = child.material.clone();
@@ -472,16 +463,13 @@ function animate(){
 		endGlowFloor.color = new THREE.Color(1, 1, 1);
 		endGlowWalls.color = new THREE.Color(1, 1, 1);
 		endGlowCeiling.color = new THREE.Color(1, 1, 1);
-		fenceL.color = new THREE.Color(1, 1, 1);
-		fenceM.color = new THREE.Color(1, 1, 1);
-		fenceR.color = new THREE.Color(1, 1, 1);	
+		fence.color = new THREE.Color(1, 1, 1);
+
 	}else{
 		endGlowFloor.color = new THREE.Color(0.5, 0.5, 0.5);
 		endGlowWalls.color = new THREE.Color(0.5, 0.5, 0.5);
 		endGlowCeiling.color = new THREE.Color(0.5, 0.5, 0.5);
-		fenceL.color = new THREE.Color(0.5, 0.5, 0.5);
-		fenceM.color = new THREE.Color(0.5, 0.5, 0.5);
-		fenceR.color = new THREE.Color(0.5, 0.5, 0.5);
+		fence.color = new THREE.Color(0.5, 0.5, 0.5);
 	};
 	
 	if(String(curTime).charAt(12) == "0"){
