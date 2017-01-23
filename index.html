@@ -20,6 +20,7 @@ var angle2 = 1;
 scene.add(root);
 	
 (function holdingBox(){
+	var done = false;
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/elevator.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.children[0].material.opacity = 0.3;
@@ -32,11 +33,13 @@ scene.add(root);
 		renderer.render(scene);
 		THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
 			if(loaded == 2){
-			main();
+				main();
+				done = true;
 			};
 		};
 	};
 	animate();
+	if(done)return;
 })();
 
 
