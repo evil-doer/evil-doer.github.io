@@ -262,7 +262,9 @@ function main(){
 			});
 			
 			object3d.addEventListener("cursordown", function(){
-				if(direction1Val == "up" ||direction1Val == "top"){
+				if(door1.position.y == 6.48208){
+					direction1.set("up");
+				}else if(direction1Val == "up" || direction1Val == "top"){
 					direction1.set("down");
 				}else if(!direction1Val || direction1Val == "down" || direction1Val == "bottom"){
 					direction1.set("up");
@@ -348,7 +350,9 @@ function main(){
 			});
 			
 			object3d.addEventListener("cursordown", function(){
-				if(direction2Val == "up" ||direction2Val == "top"){
+				if(door2.position.y == 7.5391){
+					direction2.set("up");
+				}else if(direction2Val == "up" ||direction2Val == "top"){
 					direction2.set("down");
 				}else if(!direction2Val || direction2Val == "down" || direction2Val == "bottom"){
 					direction2.set("up");
@@ -434,7 +438,9 @@ function main(){
 			});
 			
 			object3d.addEventListener("cursordown", function(){
-				if(direction3Val == "up" ||direction3Val == "top"){
+				if(door3.position.y == 5.4251){
+					direction3.set("up");
+				}else if(direction3Val == "up" ||direction3Val == "top"){
 					direction3.set("down");
 				}else if(!direction3Val || direction3Val == "down" || direction3Val == "bottom"){
 					direction3.set("up");
@@ -518,7 +524,9 @@ function main(){
 			});
 			
 			object3d.addEventListener("cursordown", function(){
-				if(direction4Val == "up" ||direction4Val == "top"){
+				if(door4.position.y == 5.42511){
+					direction4.set("up");
+				}else if(direction4Val == "up" ||direction4Val == "top"){
 					direction4.set("down");
 				}else if(!direction4Val || direction4Val == "down" || direction4Val == "bottom"){
 					direction4.set("up");
