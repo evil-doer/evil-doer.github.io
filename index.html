@@ -7,8 +7,7 @@
 
 // https://rawgit.com/evil-doer/evil-doer.github.io/master/
 
-var scene = new THREE.Scene();
-var renderer = altspace.getThreeJSRenderer();
+var sim = altspace.utilities.Simulation();
 var goingup1 = goingup2 = goingup3 = goingup4 = PlayUp = PlayDown = true;
 var root = new THREE.Object3D();
 var slime;
@@ -16,8 +15,17 @@ var timer = new Date().getTime();
 var frame = 1;
 var angle = 0;
 var e1m1Group;
-var angle2 = 1;
-scene.add(root);
+var door1 = new THREE.Object3D();
+var actualDoor1 = new THREE.Object3D();
+var door2 = new THREE.Object3D();
+var actualDoor2 = new THREE.Object3D();
+var door3 = new THREE.Object3D();
+var actualDoor3 = new THREE.Object3D();
+var door4 = new THREE.Object3D();
+var actualDoor4 = new THREE.Object3D();
+sim.scene.add(root);
+var config = { authorId: "evildoer", appId: "E1M1", baseRefUrl: "https://altspace-73900.firebaseio.com/"};
+
 	
 (function holdingBox(){
 	var done = false;
@@ -26,11 +34,10 @@ scene.add(root);
 		obj.children[0].material.opacity = 0.3;
 		obj.children[0].material.transparent = true;
 		elevator = obj;
-		scene.add(elevator);
+		sim.scene.add(elevator);
 	});
 	function animate(){
 		requestAnimationFrame(animate);
-		renderer.render(scene);
 		THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
 			if(loaded == 2){
 				main();
@@ -45,8 +52,26 @@ scene.add(root);
 
 function main(){
 
+	altspace.utilities.sync.connect(config).then(function(connection) {
+		sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+			instantiators: {"door1Trigger": door1Trigger, "door2Trigger": door2Trigger,
+			"door3Trigger": door3Trigger, "door4Trigger": door4Trigger }, ready: ready
+		});
+		sim.scene.addBehavior(sceneSync);
+	});
+	
+	function ready(firstInstance){
+		if(firstInstance){
+			sceneSync.instantiate("door1Trigger");
+			sceneSync.instantiate("door2Trigger");
+			sceneSync.instantiate("door3Trigger");
+			sceneSync.instantiate("door4Trigger");
+		};
+	};
+
+
 	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
-		scene.add(skeleton);
+		sim.scene.add(skeleton);
 		headTrack = skeleton.getJoint("Head");
 	});
 	
@@ -56,7 +81,7 @@ function main(){
 		var geometry = new THREE.SphereGeometry(2000, 32, 32); 
 		var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.BackSide});
 		sky = new THREE.Mesh(geometry, material);
-		scene.add(sky);
+		sim.scene.add(sky);
 	});
 	
 	// MAIN LEVEL
@@ -120,7 +145,7 @@ function main(){
 			}
 		});
 		e1m1Group = obj;
-		scene.add(e1m1Group);
+		sim.scene.add(e1m1Group);
 		darken();
 	});
 	
@@ -159,199 +184,349 @@ function main(){
 		obj.children[0].material.map.repeat.x = 1/3;
 		obj.position.y = 0.2;
 		slime=obj;
-		scene.add(slime);
+		sim.scene.add(slime);
 	});
 	
 	// DOOR 1 TRIGGER
-	var geometry = new THREE.BoxGeometry(0.7128, 3.92445, 5.7078); // original 0.528, 2.907, 4.228 - multiply by 1.35 to be clickable
-	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
-	var door1 = new THREE.Mesh(geometry, material);
-	door1.position.set(16.12228, 6.48208, -37.43868);
-	door1.addEventListener("cursorup", function(){DoorAction1()});	
-	scene.add(door1);
+	function door1Trigger(){
+		var geometry = new THREE.BoxGeometry(0.7128, 3.92445, 5.7078); // original 0.528, 2.907, 4.228 - multiply by 1.35 to be clickable
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+		door1 = new THREE.Mesh(geometry, material);
+		door1.position.set(16.12228, 6.48208, -37.43868);
+		door1.addBehaviors(altspace.utilities.behaviors.Object3DSync(), doorAction1() );
+		door1UpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", oneshot: true, minDistance: 3}).addTo(door1);
+		door1DownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", oneshot: true, minDistance: 3}).addTo(door1);
+		sim.scene.add(door1);
+		return(door1);
+	};
 	//DOOR 1 OBJ
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door1.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-16.12228, -6.48208, 37.43868);
 		obj.children[0].material.color = new THREE.Color(208/256, 208/256, 208/256);
 		obj.children[1].material.color = new THREE.Color(208/256, 208/256, 208/256);
-		door1.add(obj);
-				
-		DoorUpSound = new NativeComponent('n-sound', {
-			src: "DoorUp.ogg",
-			oneshot: true,
-			volume: 0.5,
-		}).addTo(door1);
-		
-		DoorDownSound = new NativeComponent('n-sound', {
-			src: "DoorDown.ogg",
-			oneshot: true,
-			volume: 0.5,
-		}).addTo(door1);
+		actualDoor1 = obj;
 	});
 	// DOOR 1 ACTION
-	function DoorAction1(){
-		if(goingup1){
-			if (PlayUp){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door1);
-				PlayUp = false;
-			}
-			door1.position.y += 0.05;
-			if(door1.position.y >= 8.7){
-				PlayUp = true;
-				goingup1 = false;
-				return;
-			}
-			requestAnimationFrame(DoorAction1);
-		}else{
-			if (PlayDown){
-				DoorDownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door1);
-				PlayDown = false;
-			}
-			door1.position.y -= 0.05;
-			if(door1.position.y <= 6.53208){
-				PlayDown = true;
-				goingup1 = true;
-				return;
-			}
-			requestAnimationFrame(DoorAction1);
-		}
+	function doorAction1(){
+		function awake(object3d){
+		
+			object3d.add(actualDoor1);
+			var sync = object3d.getBehaviorByType('Object3DSync'); 
+			
+			direction1 = sync.dataRef.child("direction1");
+			soundDown1 = sync.dataRef.child("soundDown1");
+			soundUp1 = sync.dataRef.child("soundUp1");
+
+			direction1.on("value", function(snapshot){
+				direction1Val = snapshot.val();
+				
+				doorLoop();
+				
+				function doorLoop(){
+					if (!direction1Val || direction1Val=="top" || direction1Val=="bottom")return;
+					if(direction1Val == "up"){
+						soundDown1.set("stopped");
+						door1DownSound.call("stop");
+						soundUp1.on("value", function(snap){soundUp1Val = snap.val()});
+						if(soundUp1Val == "stopped" || !soundUp1Val){
+							door1UpSound.call("play");
+							soundUp1.set("playing");
+						};
+						door1.position.y += 0.05;
+						if(door1.position.y >= 8.7){
+							soundUp1.set("stopped");
+							direction1.set("top");
+							return;
+						};
+					};
+					
+					if(direction1Val == "down"){
+						soundUp1.set("stopped");
+						door1UpSound.call("stop");
+						soundDown1.on("value", function(snap){soundDown1Val = snap.val()});
+						if(soundDown1Val == "stopped"){
+							door1DownSound.call("play"); 
+							soundDown1.set("playing");
+						};
+						door1.position.y -= 0.05;
+						if(door1.position.y <= 6.53208){
+							soundDown1.set("stopped");
+							direction1.set("bottom");
+							return;
+						};
+						
+					};
+					requestAnimationFrame(doorLoop);
+				};
+			});
+			
+			object3d.addEventListener("cursordown", function(){
+				if(direction1Val == "up" ||direction1Val == "top"){
+					direction1.set("down");
+				}else if(!direction1Val || direction1Val == "down" || direction1Val == "bottom"){
+					direction1.set("up");
+				};
+			});
+		};
+		
+		return {awake: awake};
 	};
 	
 	// DOOR 2 TRIGGER
-	var geometry = new THREE.BoxGeometry(1.42695, 8.91945, 5.7078); // original 1.057 6.607 4.228 - multiply by 1.35 to be clickable
-	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
-	var door2 = new THREE.Mesh(geometry, material);
-	door2.position.set(61.84377, 7.5391, 6.96133);
-	door2.addEventListener('cursorup', function () {
-	DoorAction2()
-	});	
-	scene.add(door2);
+	function door2Trigger(){
+		var geometry = new THREE.BoxGeometry(1.42695, 8.91945, 5.7078); // original 1.057 6.607 4.228 - multiply by 1.35 to be clickable
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+		door2 = new THREE.Mesh(geometry, material);
+		door2.position.set(61.84377, 7.5391, 6.96133);
+		door2.addBehaviors(altspace.utilities.behaviors.Object3DSync(), doorAction2() );
+		door2UpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", oneshot: true, minDistance: 3}).addTo(door2);
+		door2DownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", oneshot: true, minDistance: 3}).addTo(door2);
+		sim.scene.add(door2);
+		return(door2);
+	};
 	//DOOR 2 OBJ
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door2.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-61.84377, -7.5391, -6.96133);
 		obj.children[0].material.color = new THREE.Color(144/256, 144/256, 144/256);
 		obj.children[1].material.color = new THREE.Color(144/256, 144/256, 144/256);
-		door2.add(obj);
+		actualDoor2 = obj;
 	});
 	// DOOR 2 ACTION
-	function DoorAction2(){
-		if(goingup2){
-			if (PlayUp){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door2);
-				PlayUp = false;
-			}
-			door2.position.y += 0.05;
-			if(door2.position.y >= 9.7391){
-				PlayUp = true;
-				goingup2 = false;
-				return;
-			}
-			requestAnimationFrame(DoorAction2);
-		}else{
-			if (PlayDown){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door2);
-				PlayDown = false;
-			}
-			door2.position.y -= 0.05;
-			if(door2.position.y <= 7.5891){
-				PlayDown = true;
-				goingup2 = true;
-				return;
-			}
-			requestAnimationFrame(DoorAction2);
-		}
+	function doorAction2(){
+		function awake(object3d){
+		
+			object3d.add(actualDoor2);
+			var sync = object3d.getBehaviorByType('Object3DSync'); 
+			
+			direction2 = sync.dataRef.child("direction2");
+			soundDown2 = sync.dataRef.child("soundDown2");
+			soundUp2 = sync.dataRef.child("soundUp2");
+
+			direction2.on("value", function(snapshot){
+				direction2Val = snapshot.val();
+				
+				doorLoop();
+				
+				function doorLoop(){
+					if (!direction2Val || direction2Val=="top" || direction2Val=="bottom")return;
+					if(direction2Val == "up"){
+						soundDown2.set("stopped");
+						door2DownSound.call("stop");
+						soundUp2.on("value", function(snap){soundUp2Val = snap.val()});
+						if(soundUp2Val == "stopped" || !soundUp1Val){
+							door2UpSound.call("play");
+							soundUp2.set("playing");
+						};
+						door2.position.y += 0.05;
+						if(door2.position.y >= 9.7391){
+							soundUp2.set("stopped");
+							direction2.set("top");
+							return;
+						};
+					};
+					
+					if(direction2Val == "down"){
+						soundUp2.set("stopped");
+						door2UpSound.call("stop");
+						soundDown2.on("value", function(snap){soundDown2Val = snap.val()});
+						if(soundDown2Val == "stopped"){
+							door2DownSound.call("play"); 
+							soundDown2.set("playing");
+						};
+						door2.position.y -= 0.05;
+						if(door2.position.y <= 7.5891){
+							soundDown2.set("stopped");
+							direction2.set("bottom");
+							return;
+						};
+						
+					};
+					requestAnimationFrame(doorLoop);
+				};
+			});
+			
+			object3d.addEventListener("cursordown", function(){
+				if(direction2Val == "up" ||direction2Val == "top"){
+					direction2.set("down");
+				}else if(!direction2Val || direction2Val == "down" || direction2Val == "bottom"){
+					direction2.set("up");
+				};
+			});
+		};
+		
+		return {awake: awake};
 	};
 	
 	// DOOR 3 TRIGGER
-	var geometry = new THREE.BoxGeometry(5.70915, 3.21165, 0.71415); // original 4.229 2.379 0.529 - multiply by 1.35 to be clickable
-	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
-	var door3 = new THREE.Mesh(geometry, material);
-	door3.position.set(64.48676, 5.4251, 13.03983);
-	door3.addEventListener('cursorup', function () {
-	DoorAction3()
-	});	
-	scene.add(door3);
+	function door3Trigger(){	
+		var geometry = new THREE.BoxGeometry(5.70915, 3.21165, 0.71415); // original 4.229 2.379 0.529 - multiply by 1.35 to be clickable
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+		door3 = new THREE.Mesh(geometry, material);
+		door3.position.set(64.48676, 5.4251, 13.03983);
+		door3.addBehaviors(altspace.utilities.behaviors.Object3DSync(), doorAction3() );
+		door3UpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", oneshot: true, minDistance: 3}).addTo(door3);
+		door3DownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", oneshot: true, minDistance: 3}).addTo(door3);
+		sim.scene.add(door3);
+		return(door3);
+	};	
 	//DOOR 3 OBJ
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door3.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-64.48676, -5.4251, -13.03983);
 		obj.children[0].material.color = new THREE.Color(228/256, 228/256, 228/256);
 		obj.children[1].material.color = new THREE.Color(228/256, 228/256, 228/256);
-		door3.add(obj);
+		actualDoor3 = obj;
 	});
 	// DOOR 3 ACTION
-	function DoorAction3(){
-		if(goingup3){
-			if (PlayUp){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door3);
-				PlayUp = false;
-			}
-			door3.position.y += 0.05;
-			if(door3.position.y >= 7.6251){
-				PlayUp = true;
-				goingup3 = false;
-				return;
-			}
-			requestAnimationFrame(DoorAction3);
-		}else{
-			if (PlayDown){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door3);
-				PlayDown = false;
-			}
-			door3.position.y -= 0.05;
-			if(door3.position.y <= 5.4751){
-				PlayDown = true;
-				goingup3 = true;
-				return;
-			}
-			requestAnimationFrame(DoorAction3);
-		}
+	function doorAction3(){
+		function awake(object3d){
+		
+			object3d.add(actualDoor3);
+			var sync = object3d.getBehaviorByType('Object3DSync'); 
+			
+			direction3 = sync.dataRef.child("direction3");
+			soundDown3 = sync.dataRef.child("soundDown3");
+			soundUp3 = sync.dataRef.child("soundUp3");
+
+			direction3.on("value", function(snapshot){
+				direction3Val = snapshot.val();
+				
+				doorLoop();
+				
+				function doorLoop(){
+					if (!direction3Val || direction3Val=="top" || direction3Val=="bottom")return;
+					if(direction3Val == "up"){
+						soundDown3.set("stopped");
+						door3DownSound.call("stop");
+						soundUp3.on("value", function(snap){soundUp3Val = snap.val()});
+						if(soundUp3Val == "stopped" || !soundUp3Val){
+							door3UpSound.call("play");
+							soundUp3.set("playing");
+						};
+						door3.position.y += 0.05;
+						if(door3.position.y >= 7.6251){
+							soundUp3.set("stopped");
+							direction3.set("top");
+							return;
+						};
+					};
+					
+					if(direction3Val == "down"){
+						soundUp3.set("stopped");
+						door3UpSound.call("stop");
+						soundDown3.on("value", function(snap){soundDown3Val = snap.val()});
+						if(soundDown3Val == "stopped"){
+							door3DownSound.call("play"); 
+							soundDown3.set("playing");
+						};
+						door3.position.y -= 0.05;
+						if(door3.position.y <= 5.4751){
+							soundDown3.set("stopped");
+							direction3.set("bottom");
+							return;
+						};
+						
+					};
+					requestAnimationFrame(doorLoop);
+				};
+			});
+			
+			object3d.addEventListener("cursordown", function(){
+				if(direction3Val == "up" ||direction3Val == "top"){
+					direction3.set("down");
+				}else if(!direction3Val || direction3Val == "down" || direction3Val == "bottom"){
+					direction3.set("up");
+				};
+			});
+		};
+		
+		return {awake: awake};
 	};
 	
 	// DOOR 4 TRIGGER
-	var geometry = new THREE.BoxGeometry(2.85525, 3.21165, 0.71415); // original 2.115 2.379 0.529 - multiply by 1.35 to be clickable
-	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
-	var door4 = new THREE.Mesh(geometry, material);
-	door4.position.set(64.48676, 5.42511, 33.38983);
-	door4.addEventListener('cursorup', function () {
-	DoorAction4()
-	});	
-	scene.add(door4);
+	function door4Trigger(){	
+		var geometry = new THREE.BoxGeometry(2.85525, 3.21165, 0.71415); // original 2.115 2.379 0.529 - multiply by 1.35 to be clickable
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+		door4 = new THREE.Mesh(geometry, material);
+		door4.position.set(64.48676, 5.42511, 33.38983);
+		door4.addBehaviors(altspace.utilities.behaviors.Object3DSync(), doorAction4() );
+		door4UpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", oneshot: true, minDistance: 3}).addTo(door4);
+		door4DownSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", oneshot: true, minDistance: 3}).addTo(door4);
+		sim.scene.add(door4);
+		return(door4);
+	};
 	//DOOR 4 OBJ
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/door4.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-64.48676, -5.42511, -33.38983);
-		door4.add(obj);
+		actualDoor4 = obj;
 	});
 	// DOOR 4 ACTION
-	function DoorAction4(){
-		if(goingup4){
-			if (PlayUp){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorUp.ogg", autoplay: true, minDistance: 3}).addTo(door4);
-				PlayUp = false;
-			}
-			door4.position.y += 0.05;
-			if(door4.position.y >= 7.62511){
-				PlayUp = true;
-				goingup4 = false;
-				return;
-			}
-			requestAnimationFrame(DoorAction4);
-		}else{
-			if (PlayDown){
-				DoorUpSound = new NativeComponent('n-sound', {src: "DoorDown.ogg", autoplay: true, minDistance: 3}).addTo(door4);
-				PlayDown = false;
-			}
-			door4.position.y -= 0.05;
-			if(door4.position.y <= 5.47511){
-				PlayDown = true;
-				goingup4 = true;
-				return;
-			}
-			requestAnimationFrame(DoorAction4);
-		}
+	function doorAction4(){
+		function awake(object3d){
+		
+			object3d.add(actualDoor4);
+			var sync = object3d.getBehaviorByType('Object3DSync'); 
+			
+			direction4 = sync.dataRef.child("direction4");
+			soundDown4 = sync.dataRef.child("soundDown4");
+			soundUp4 = sync.dataRef.child("soundUp4");
+
+			direction4.on("value", function(snapshot){
+				direction4Val = snapshot.val();
+				
+				doorLoop();
+				
+				function doorLoop(){
+					if (!direction4Val || direction4Val=="top" || direction4Val=="bottom")return;
+					if(direction4Val == "up"){
+						soundDown4.set("stopped");
+						door4DownSound.call("stop");
+						soundUp4.on("value", function(snap){soundUp4Val = snap.val()});
+						if(soundUp4Val == "stopped" || !soundUp4Val){
+							door4UpSound.call("play");
+							soundUp4.set("playing");
+						};
+						door4.position.y += 0.05;
+						if(door4.position.y >= 7.62511){
+							soundUp4.set("stopped");
+							direction4.set("top");
+							return;
+						};
+					};
+					
+					if(direction4Val == "down"){
+						soundUp4.set("stopped");
+						door4UpSound.call("stop");
+						soundDown4.on("value", function(snap){soundDown4Val = snap.val()});
+						if(soundDown4Val == "stopped"){
+							door4DownSound.call("play"); 
+							soundDown4.set("playing");
+						};
+						door4.position.y -= 0.05;
+						if(door4.position.y <= 5.47511){
+							soundDown4.set("stopped");
+							direction4.set("bottom");
+							return;
+						};
+						
+					};
+					requestAnimationFrame(doorLoop);
+				};
+			});
+			
+			object3d.addEventListener("cursordown", function(){
+				if(direction4Val == "up" ||direction4Val == "top"){
+					direction4.set("down");
+				}else if(!direction4Val || direction4Val == "down" || direction4Val == "bottom"){
+					direction4.set("up");
+				};
+			});
+		};
+		
+		return {awake: awake};
 	};
 	
 	// COLLISION RAMPS
@@ -362,7 +537,7 @@ function main(){
 		});
 		obj.children[0].material.opacity = 0;
 		obj.children[0].material.transparent = true;
-		scene.add(obj);
+		sim.scene.add(obj);
 	});
 	
 	// TRANSPARENT WALL
@@ -373,7 +548,7 @@ function main(){
 		obj.children[0].material.opacity = 0.9;
 		obj.children[0].material.transparent = true;
 		obj.children[0].material.color = new THREE.Color(192/256, 192/256, 192/256);
-		scene.add(obj);
+		sim.scene.add(obj);
 	});
 	
 	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/COLUA0.png", function(texture){
@@ -440,33 +615,40 @@ function main(){
 	});
 	
 	
+	(function animateYet(){
+		THREE.DefaultLoadingManager.onProgress = function(item, loaded, total){
+			if(loaded == total){
+				sim.scene.remove(elevator);
+				animate();
+				return;
+			};
+		};
+		requestAnimationFrame(animateYet);
+	})();
 	
 	//ANIMATION LOOP
 	function animate(){
-		THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
-			if(loaded == total){
-				scene.remove(elevator);
-			};
-		};
-	
 		requestAnimationFrame(animate);
-		renderer.render(scene);
+
+		spinnyThing.map.offset.x += 0.005;
+		
 		curTime = new Date().getTime();
 		glowState = 0.75+0.25*Math.cos(angle += .1);
 		
-		//scene.scale.set(3+2*Math.cos(angle2 += 0.005), 1, 3+2*Math.cos(angle2));
-	
+		column1.material.color = new THREE.Color(glowState, glowState, glowState);
+		column2.material.color = new THREE.Color(glowState, glowState, glowState);
+		
 		leftColFloor.color = new THREE.Color(glowState, glowState, glowState);
 		leftColCeiling.color = new THREE.Color(glowState, glowState, glowState);
 		rightColFloor.color = new THREE.Color(glowState, glowState, glowState);
 		rightColCeiling.color = new THREE.Color(glowState, glowState, glowState);
-		
+
 		if(String(curTime).charAt(10) == "0"){
 			endGlowFloor.color = new THREE.Color(1, 1, 1);
 			endGlowWalls.color = new THREE.Color(1, 1, 1);
 			endGlowCeiling.color = new THREE.Color(1, 1, 1);
 			fence.color = new THREE.Color(1, 1, 1);
-	
+		
 		}else{
 			endGlowFloor.color = new THREE.Color(0.5, 0.5, 0.5);
 			endGlowWalls.color = new THREE.Color(0.5, 0.5, 0.5);
@@ -484,8 +666,9 @@ function main(){
 			spawnWalls.color = new THREE.Color(0.5625, 0.5625, 0.5625);
 			spawnDoor.color = new THREE.Color(0.5625, 0.5625, 0.5625);
 			spawnCeiling.color = new THREE.Color(0.5625, 0.5625, 0.5625);
-		};
 	
+		};
+		
 		if(frame==1){
 			slime.children[0].material.map.offset.x = 0;
 			if(curTime > timer + 300){
@@ -505,14 +688,8 @@ function main(){
 				frame = 1;
 			};
 		};
-		spinnyThing.map.offset.x += 0.005;
-		
-		column1.material.color = new THREE.Color(glowState, glowState, glowState);
-		column2.material.color = new THREE.Color(glowState, glowState, glowState);
-
+		//sim.scene.scale.set(3+2*Math.cos(angle2 += 0.005), 1, 3+2*Math.cos(angle2));
 	};
-	
-	animate();
 };
 
 </script></body></html>
