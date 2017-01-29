@@ -634,14 +634,14 @@ function main(){
 		barrel.children[0].object.position.y = -1000;
 	});
 	
-	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/BARREL.png", function(texture){	
-		var geometry = new THREE.PlaneGeometry(1, 1.28);
+	UltimateLoader.load("models/e1m1/BARREL.png", function(texture){	
+		var geometry = new THREE.PlaneGeometry(1, 1.36);
 		var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});		
 		barrel1 = new THREE.Mesh(geometry, material);
 		barrel1.material.map.repeat.x = 1/2;
 		barrel1.scale.multiplyScalar(0.80);
 		
-		barrel1.position.set(-6.171 ,5.62856, -9.69775);			
+		barrel1.position.set(-6.171 ,5.52856, -9.69775);			
 		var one = new NativeComponent('n-billboard', null, barrel1).addTo(root);
 		barrel.children[1] = one;
 		barrel.children[1].object.addEventListener('cursorup', function(){barrelAction(1, Date.now())});
@@ -649,7 +649,7 @@ function main(){
 		
 		barrel2 = new THREE.Mesh;
 		barrel2 = barrel1.clone();
-		barrel2.position.set(8.13129 ,5.09957, -12.16677);
+		barrel2.position.set(8.13129 ,4.99957, -12.16677);
 		var two = new NativeComponent('n-billboard', null, barrel2).addTo(root);
 		barrel.children[2] = two;
 		barrel.children[2].object.addEventListener('cursorup', function(){barrelAction(2, Date.now())});
@@ -657,7 +657,7 @@ function main(){
 		
 		barrel3 = new THREE.Mesh;
 		barrel3 = barrel1.clone();
-		barrel3.position.set(3.4337 ,5.62856, -23.78048);
+		barrel3.position.set(3.4337 ,5.52856, -23.78048);
 		var three = new NativeComponent('n-billboard', null, barrel3).addTo(root);
 		barrel.children[3] = three;
 		barrel.children[3].object.addEventListener('cursorup', function(){barrelAction(3, Date.now())});
@@ -665,7 +665,7 @@ function main(){
 		
 		barrel4 = new THREE.Mesh;
 		barrel4 = barrel1.clone();
-		barrel4.position.set(62.50485 ,4.83559, 22.92304);
+		barrel4.position.set(62.50485 ,4.73559, 22.92304);
 		var four = new NativeComponent('n-billboard', null, barrel4).addTo(root);
 		barrel.children[4] = four;
 		barrel.children[4].object.addEventListener('cursorup', function(){barrelAction(4, Date.now())});
@@ -673,7 +673,7 @@ function main(){
 		
 		barrel5 = new THREE.Mesh;
 		barrel5 = barrel1.clone();
-		barrel5.position.set(58.10878 ,4.83559, 20.39379);
+		barrel5.position.set(58.10878 ,4.73559, 20.39379);
 		var five = new NativeComponent('n-billboard', null, barrel5).addTo(root);
 		barrel.children[5] = five;
 		barrel.children[5].object.addEventListener('cursorup', function(){barrelAction(5, Date.now())});
@@ -681,7 +681,7 @@ function main(){
 		
 		barrel6 = new THREE.Mesh;
 		barrel6 = barrel1.clone();
-		barrel6.position.set(70.51413 ,4.83559, 19.8217);
+		barrel6.position.set(70.51413 ,4.73559, 19.8217);
 		var six = new NativeComponent('n-billboard', null, barrel6).addTo(root);
 		barrel.children[6] = six;
 		barrel.children[6].object.addEventListener('cursorup', function(){barrelAction(6, Date.now())});
