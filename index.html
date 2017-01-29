@@ -11,7 +11,7 @@ var sim = altspace.utilities.Simulation();
 var goingup1 = goingup2 = goingup3 = goingup4 = PlayUp = PlayDown = true;
 var root = new THREE.Object3D();
 var slime;
-var timer = new Date().getTime();
+var timer = Date.now();
 var frame = 1;
 var angle = 0;
 var e1m1Group;
@@ -25,6 +25,7 @@ var door4 = new THREE.Object3D();
 var actualDoor4 = new THREE.Object3D();
 sim.scene.add(root);
 var config = { authorId: "evildoer", appId: "E1M1", baseRefUrl: "https://altspace-73900.firebaseio.com/"};
+var barrel = new THREE.Object3D();
 
 	
 (function holdingBox(){
@@ -77,7 +78,7 @@ function main(){
 	
 	// SKY SPHERE
 	var loader = new THREE.TextureLoader();
-	loader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/SKY1.png", function(texture){
+	loader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/SKY2.jpg", function(texture){
 		var geometry = new THREE.SphereGeometry(2000, 32, 32); 
 		var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.BackSide});
 		sky = new THREE.Mesh(geometry, material);
@@ -317,7 +318,7 @@ function main(){
 						soundDown2.set("stopped");
 						door2DownSound.call("stop");
 						soundUp2.on("value", function(snap){soundUp2Val = snap.val()});
-						if(soundUp2Val == "stopped" || !soundUp1Val){
+						if(soundUp2Val == "stopped" || !soundUp2Val){
 							door2UpSound.call("play");
 							soundUp2.set("playing");
 						};
@@ -621,6 +622,90 @@ function main(){
 		var candelabra1Board = new NativeComponent('n-billboard', null, candelabra1).addTo(root);
 		var candelabra2Board = new NativeComponent('n-billboard', null, candelabra2).addTo(root);
 	});
+
+	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/BARREL.png", function(texture){
+		var geometry = new THREE.PlaneGeometry(2.40, 2.12);
+		var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+		var texture2 = texture.clone();
+		var material2 = new THREE.MeshBasicMaterial({map: texture2, transparent: true, opacity: 1, side: THREE.DoubleSide});
+		barrel0 = new THREE.Mesh(geometry, material);
+		barrel0.scale.multiplyScalar(0.80);
+		barrel0.material.map.repeat.x = 1/5;
+		var zero = new NativeComponent('n-billboard', null, barrel0).addTo(root);
+		barrel.children[0] = zero;
+		barrel.children[0].object.position.y = -1000;
+		
+		barrel1 = new THREE.Mesh(geometry, material2);
+		barrel1.scale.multiplyScalar(0.80);
+		barrel1.material.map.repeat.x = 1/5;
+		barrel1.position.set(-6.171 ,5.92856, -9.69775);			
+		var one = new NativeComponent('n-billboard', null, barrel1).addTo(root);
+		barrel.children[1] = one;
+		barrel.children[1].object.addEventListener('cursorup', function(){barrelAction(1, Date.now())});
+		barrel.children[1].object.userData.altspace = {collider: {enabled: true}};
+		
+		barrel2 = new THREE.Mesh;
+		barrel2 = barrel1.clone();
+		barrel2.position.set(8.13129 ,5.39957, -12.16677);
+		var two = new NativeComponent('n-billboard', null, barrel2).addTo(root);
+		barrel.children[2] = two;
+		barrel.children[2].object.addEventListener('cursorup', function(){barrelAction(2, Date.now())});
+		barrel.children[2].object.userData.altspace = {collider: {enabled: true}};
+		
+		barrel3 = new THREE.Mesh;
+		barrel3 = barrel1.clone();
+		barrel3.position.set(3.4337 ,5.92856, -23.78048);
+		var three = new NativeComponent('n-billboard', null, barrel3).addTo(root);
+		barrel.children[3] = three;
+		barrel.children[3].object.addEventListener('cursorup', function(){barrelAction(3, Date.now())});
+		barrel.children[3].object.userData.altspace = {collider: {enabled: true}};
+		
+		barrel4 = new THREE.Mesh;
+		barrel4 = barrel1.clone();
+		barrel4.position.set(62.50485 ,5.13559, 22.92304);
+		var four = new NativeComponent('n-billboard', null, barrel4).addTo(root);
+		barrel.children[4] = four;
+		barrel.children[4].object.addEventListener('cursorup', function(){barrelAction(4, Date.now())});
+		barrel.children[4].object.userData.altspace = {collider: {enabled: true}};
+		
+		barrel5 = new THREE.Mesh;
+		barrel5 = barrel1.clone();
+		barrel5.position.set(58.10878 ,5.13559, 20.39379);
+		var five = new NativeComponent('n-billboard', null, barrel5).addTo(root);
+		barrel.children[5] = five;
+		barrel.children[5].object.addEventListener('cursorup', function(){barrelAction(5, Date.now())});
+		barrel.children[5].object.userData.altspace = {collider: {enabled: true}};
+		
+		barrel6 = new THREE.Mesh;
+		barrel6 = barrel1.clone();
+		barrel6.position.set(70.51413 ,5.13559, 19.8217);
+		var six = new NativeComponent('n-billboard', null, barrel6).addTo(root);
+		barrel.children[6] = six;
+		barrel.children[6].object.addEventListener('cursorup', function(){barrelAction(6, Date.now())});
+		barrel.children[6].object.userData.altspace = {collider: {enabled: true}};
+	});
+
+	
+	function barrelAction(num, counter){
+		barrel.children[0].object.position.copy(barrel.children[num].object.position);
+		barrel.children[num].object.position.y = -1000;
+		var explosion = new NativeComponent('n-sound', {autoplay: true, src: "Explosion.ogg", oneshot: true, minDistance: 3}).addTo(barrel.children[0].object);
+		loop();
+		function loop(){
+			var curTime = Date.now();
+			if(curTime - counter > 900){
+				barrel.children[0].object.position.y = -1000;
+				return;
+			}else if(curTime - counter > 600){
+				barrel.children[0].object.material.map.offset.x = .8;
+			}else if(curTime - counter > 300){
+				barrel.children[0].object.material.map.offset.x = .6;
+			}else{
+				barrel.children[0].object.material.map.offset.x = .4;
+			};
+			requestAnimationFrame(loop);
+		};
+	};
 	
 	
 	(function animateYet(){
@@ -638,10 +723,17 @@ function main(){
 	function animate(){
 		requestAnimationFrame(animate);
 
+		curTime = Date.now();
+		
+		glowState = 0.75+0.25*Math.cos(angle += .1);
+		
 		spinnyThing.map.offset.x += 0.005;
 		
-		curTime = new Date().getTime();
-		glowState = 0.75+0.25*Math.cos(angle += .1);
+		if(parseInt(String(curTime).slice(10,13)) >500){
+			barrel1.material.map.offset.x = 0.206666;
+		}else{
+			barrel1.material.map.offset.x = 0;
+		};
 		
 		column1.material.color = new THREE.Color(glowState, glowState, glowState);
 		column2.material.color = new THREE.Color(glowState, glowState, glowState);
