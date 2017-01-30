@@ -1,31 +1,33 @@
 <html><head><title>E1M1</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+//<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
 <script src="dist/altspace.min.js"></script>
+<script src="dist/JSNativeComponents.js"></script>
 </head><body><script>
 
 // https://rawgit.com/evil-doer/evil-doer.github.io/master/
 
 var sim = altspace.utilities.Simulation();
 var goingup1 = goingup2 = goingup3 = goingup4 = PlayUp = PlayDown = true;
-var root = new THREE.Object3D();
 var slime;
 var timer = Date.now();
 var frame = 1;
 var angle = 0;
 var e1m1Group;
 var door1 = new THREE.Object3D();
-var actualDoor1 = new THREE.Object3D();
 var door2 = new THREE.Object3D();
-var actualDoor2 = new THREE.Object3D();
 var door3 = new THREE.Object3D();
-var actualDoor3 = new THREE.Object3D();
 var door4 = new THREE.Object3D();
+var actualDoor1 = new THREE.Object3D();
+var actualDoor2 = new THREE.Object3D();
+var actualDoor3 = new THREE.Object3D();
 var actualDoor4 = new THREE.Object3D();
+var barrel = new THREE.Object3D();
+var root = new THREE.Object3D();
 sim.scene.add(root);
 var config = { authorId: "evildoer", appId: "E1M1", baseRefUrl: "https://altspace-73900.firebaseio.com/"};
-var barrel = new THREE.Object3D();
+
 
 	
 (function holdingBox(){
@@ -634,7 +636,7 @@ function main(){
 		barrel.children[0].object.position.y = -1000;
 	});
 	
-	UltimateLoader.load("models/e1m1/BARREL.png", function(texture){	
+	UltimateLoader.load("https://rawgit.com/evil-doer/evil-doer.github.io/master/models/e1m1/BARREL.png", function(texture){	
 		var geometry = new THREE.PlaneGeometry(1, 1.36);
 		var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});		
 		barrel1 = new THREE.Mesh(geometry, material);
@@ -688,8 +690,7 @@ function main(){
 		barrel.children[6].object.userData.altspace = {collider: {enabled: true}};
 	});
 
-	
-	function barrelAction(num, counter){
+		function barrelAction(num, counter){
 		barrel.children[0].object.position.copy(barrel.children[num].object.position);
 		barrel.children[0].object.position.y +=.35
 		barrel.children[num].object.position.y = -1000;
@@ -720,6 +721,9 @@ function main(){
 		THREE.DefaultLoadingManager.onProgress = function(item, loaded, total){
 			if(loaded == total){
 				sim.scene.remove(elevator);
+				var musicPoint = new THREE.Object3D(0,6,0);
+				sim.scene.add(musicPoint);
+				var music = new NativeComponent('n-sound', {autoplay: true, src: "E1M1.ogg", loop: true}).addTo(musicPoint);
 				animate();
 				return;
 			};
