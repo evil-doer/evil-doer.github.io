@@ -1,0 +1,12 @@
+# Blender v2.77 (sub 0) OBJ File: 'ParlorMeasurement.blend'
+# www.blender.org
+mtllib minute.mtl
+o Minutes_Plane
+v -0.003802 -0.011616 0.005000
+v 0.003802 -0.011616 0.005000
+v -0.003802 0.209941 0.005000
+v 0.003802 0.209941 0.005000
+vn 0.0000 0.0000 1.0000
+usemtl Material
+s off
+f 1//1 2//1 4//1 3//1

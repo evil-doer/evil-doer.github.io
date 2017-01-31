@@ -1,0 +1,28 @@
+newmtl baked_surfaceShader1SG_LP_B_Rocks_04_B_Rocks_03SG4
+illum 4
+Kd 1 1 1
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd rock.jpg
+newmtl baked_surfaceShader1SG_altsword_Sword07_el1SG4
+illum 4
+Kd 1 1 1
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd sword.jpg
+newmtl baked_surfaceShader1SG_altsword_Sword07_el2SG4
+illum 4
+Kd 1 1 1
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd sword.jpg
+newmtl baked_surfaceShader1SG_altsword_Sword07_el3SG4
+illum 4
+Kd 1 1 1
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd sword.jpg
