@@ -13,7 +13,7 @@ scene.add(root);
 root.position.set(-5.6829, 4.146, -1.32);
 var sky = new THREE.Mesh();
 var models = ["swordinstone", "grass", "skull", "snow", "molecule", "sana", "clock", "minute", "hour",
- "second", "3pictures", "backing", "carpet", "backwallfar", "backwallclose", "flooringcap", "curvewall"];
+ "second", "3pictures", "backing", "carpet", "backwallfar", "backwallclose", "flooringcap", "curvewall", "parlor"];
 var timer;
 var molecule = new THREE.Mesh();
 var sana = new THREE.Mesh();
@@ -21,6 +21,12 @@ var hour = new THREE.Mesh();
 var minute = new THREE.Mesh();
 var second = new THREE.Mesh();
 var angle = 1;
+var headPos = new THREE.Object3D;
+var soundPos = new THREE.Object3D;
+scene.add(headPos);
+headPos.add(soundPos);
+soundPos.position.z = 1;
+var alarmPlaying = true;
 
 (function setup(){
 	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
@@ -66,7 +72,13 @@ function main(){
 		scene.add(skull = loadRequest.objects[2]);
 		skull.scale.set(0.5, 0.5, 0.5);
 		skull.position.set(5.3071, -1000, -8.99);
-		scream = new NativeComponent('n-sound', {src: "PsychoScream.ogg", oneshot: true, minDistance: 3}).addTo(skull);
+		scream = new NativeComponent('n-sound', {src: "sounds/PsychoScream.ogg", volume: 1, minDistance: 3}).addTo(skull);
+		
+		scene.add(parlor = loadRequest.objects[17]);
+		parlor.position.y = -1000;
+		parlor.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+		});
 		
 		root.add(snow = loadRequest.objects[3]);
 		snow.position.set(-0.002,0,0.002);
@@ -96,17 +108,45 @@ function main(){
 		root.add(flooringcap = loadRequest.objects[15]);
 		root.add(curvewall = loadRequest.objects[16]);
 		
-		var geometry = new THREE.BoxGeometry(0.06, 0.06, 0.06);
-		var material = new THREE.MeshBasicMaterial({
-			transparent: true, opacity: 0
-		});
+		var geometry = new THREE.BoxGeometry(0.16, 0.16, 0.16);
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
 		var cube = new THREE.Mesh(geometry, material);
 		cube.rotation.y = THREE.Math.degToRad(40);
-		cube.position.set(10.85, -1.52, -7.80);
-		root.add(cube);
-		cube.addEventListener('cursorup', function () {
-			showSkull()
-		});
+		cube.position.set(5.162, 2.61898, -9.12333);
+		scene.add(cube);
+		cube.addEventListener("cursorup", function(){showSkull()});
+		
+
+		var geometry = new THREE.BoxGeometry(0.14, 0.14, 0.14);
+		var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+		var cube2 = new THREE.Mesh(geometry, material);
+		cube2.rotation.y = THREE.Math.degToRad(37.5);
+		cube2.position.set(2.8539, 2.72418, -3.1649);
+		scene.add(cube2);
+		cube2.addEventListener("cursorup", function(){craziness()});
+		
+		function craziness(){
+			if(alarmPlaying){
+				alarmPlaying = false;
+				alarm = new NativeComponent('n-sound', {src: "sounds/Alarm.ogg", autoplay: true, volume: 1, loop: true}).addTo(soundPos);
+				parlor.position.y = 0;
+				loop();
+				function loop(){
+					headPos.position.copy(headTrack.position);
+					headPos.rotation.y += 0.05;
+					parlor.children[0].material.color.setRGB(Math.random(), Math.random(), Math.random());
+					requestAnimationFrame(loop);
+				};
+			}else{
+				alarmPlaying = true; 
+					alarm.call("pause");
+					alarm.call("seek", {time:0});
+					parlor.position.y = -1000;
+				return;
+			};
+		};
+		
+		
 		//sky sphere
 		var loader = new THREE.TextureLoader();
 		loader.load('images/sana/SanaBG.jpg', function(texture){
