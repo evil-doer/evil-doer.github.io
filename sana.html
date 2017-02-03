@@ -24,6 +24,7 @@ var second = new THREE.Mesh();
 var angle = 1;
 var headPos = new THREE.Object3D;
 var soundPos = new THREE.Object3D;
+var alarm = new NativeComponent('n-sound', {src: "sounds/Alarm.ogg", volume: 1, loop: true}).addTo(soundPos);
 var swirl = new THREE.Object3D;
 scene.add(headPos);
 headPos.add(soundPos);
@@ -145,7 +146,7 @@ function main(){
 		function craziness(){
 			if(alarmPlaying){
 				alarmPlaying = false;
-				alarm = new NativeComponent('n-sound', {src: "sounds/Alarm.ogg", autoplay: true, volume: 1, loop: true}).addTo(soundPos);
+				alarm.call("play");
 				parlor.position.y = 0;
 				swirl.position.y = 0;
 				i=0;
