@@ -130,13 +130,17 @@ function main(){
 				alarmPlaying = false;
 				alarm = new NativeComponent('n-sound', {src: "sounds/Alarm.ogg", autoplay: true, volume: 1, loop: true}).addTo(soundPos);
 				parlor.position.y = 0;
-				loop();
-				function loop(){
+				i=0;
+				(function loop(){
 					headPos.position.copy(headTrack.position);
 					headPos.rotation.y += 0.05;
-					parlor.children[0].material.color.setRGB(Math.random(), Math.random(), Math.random());
+					//parlor.children[0].material.color.setRGB(Math.random(), Math.random(), Math.random());
+					r = Math.sin((i += 0.0005) + 0) * 127 + 128;
+					g = Math.sin(i + 2) * 127 + 128;
+					b = Math.sin(i + 4) * 127 + 128;
+					parlor.children[0].material.color.setRGB(r, g, b);
 					requestAnimationFrame(loop);
-				};
+				}());
 			}else{
 				alarmPlaying = true; 
 					alarm.call("pause");
