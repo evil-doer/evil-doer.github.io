@@ -58,14 +58,19 @@ function main(){
 		parlor.traverse(function(child){
 			child.userData.altspace = {collider:{enabled: false}};
 		});
-		
 		scene.add(snow = obj[3]);
 		snow.position.set(-5.6849, 4.146, -1.318);
 		snow.rotation.y = THREE.Math.degToRad(30);
+		snow.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+		});
 		
 		scene.add(molecule = obj[4]);
 		molecule.scale.multiplyScalar(2.35);
 		molecule.position.set(-5.6829, 5.776, -1.32);
+		molecule.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+		});
 		scene.add(sana = obj[5]);
 		sana.rotation.y = THREE.Math.degToRad(-90);
 		sana.position.set(-5.4329, 5.776, -1.32);
@@ -93,7 +98,16 @@ function main(){
 		flooringcap.position.set(-5.6829, 4.146, -1.32);
 		scene.add(curvewall = obj[16]);
 		curvewall.position.set(-5.6829, 4.146, -1.32);
+		curvewall.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+		});
 		
+		scene.traverse(function(child){ //fix for ultimateloader loading double sided textures by default
+			if(child instanceof THREE.Mesh){
+				child.material.side = 0;
+			};
+		});
+
 		UltimateLoader.load("images/sana/swirl.png", function(texture){
 			var geometry = new THREE.PlaneGeometry(0.2, 0.2);
 			var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 0.1, side: THREE.DoubleSide});
@@ -151,10 +165,8 @@ function main(){
 			};
 		};
 	
-		
 		//sky sphere
-		var loader = new THREE.TextureLoader();
-		loader.load('images/sana/SanaBG.jpg', function(texture){
+		UltimateLoader.load('images/sana/SanaBG.jpg', function(texture){
 			var geometry = new THREE.SphereGeometry(735, 36, 36);
 			var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide});
 			sky = new THREE.Mesh(geometry, material);
@@ -170,7 +182,7 @@ function main(){
 		});
 		scene.add(plane);
 		
-		//          jpeg filename	wd.	ht.	mov x   mov y	mov z	deg (scene pos)
+		//jpeg filename	wd.	ht.	mov x   mov y	mov z	deg (scene pos)
 		
 		DrawPic("eyes", 2.27, 0.76, 1.5671, 4.706, 2.66 , -90);
 		DrawPic("LunBobby", 4.27, 2.77, -5.9429 , 4.036 , -11.27, -90);
@@ -193,7 +205,6 @@ function main(){
 	});
 	
 	//draw wall pictures
-	
 	function DrawPic(file, wd, ht, movX, movY, movZ, deg){
 		UltimateLoader.load("images/sana/" + file + ".jpg", function(texture){
 			var geometry = new THREE.PlaneGeometry(wd, ht);
