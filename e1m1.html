@@ -1,0 +1,626 @@
+<html><head><title>E1M1</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+</head><body><script>
+
+var sim = altspace.utilities.Simulation();
+var slime;
+var timer = Date.now();
+var frame = 1;
+var angle = 0;
+var e1m1Group;
+var barrel = new THREE.Object3D();
+firebase.initializeApp({databaseURL: "https://sync-5613c.firebaseio.com/"});
+var door1DB = firebase.database().ref("Doors/door1");
+var door2DB = firebase.database().ref("Doors/door2");
+var door3DB = firebase.database().ref("Doors/door3");
+var door4DB = firebase.database().ref("Doors/door4");
+
+//LIFT AND HOLD USER UNTIL LEVEL IS LOADED
+(function holdingBox(){
+	var done = false;
+	UltimateLoader.load("models/elevator.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.children[0].material.opacity = 0.3;
+		obj.children[0].material.transparent = true;
+		elevator = obj;
+		sim.scene.add(elevator);
+	});
+	function animate(){
+		requestAnimationFrame(animate);
+		THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
+			if(loaded == 2){
+				main();
+				done = true;
+			};
+		};
+	};
+	animate();
+	if(done)return;
+}());
+
+function main(){
+	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+		sim.scene.add(skeleton);
+		headTrack = skeleton.getJoint("Head");
+	});
+	//SKY SPHERE
+	var loader = new THREE.TextureLoader();
+	loader.load("models/SKY1.jpg", function(texture){
+		var geometry = new THREE.SphereGeometry(2000, 32, 32); 
+		var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.BackSide});
+		sky = new THREE.Mesh(geometry, material);
+		sim.scene.add(sky);
+	});
+	//MAIN LEVEL
+	UltimateLoader.load("models/e1m1.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		e1m1Group = obj;
+		sim.scene.add(e1m1Group);
+		darken();
+		
+		//SPECIAL LIGHTING SECTORS
+		var array = [["Object__218", "endGlowFloor"],["Object__220", "endGlowWalls"],["Object__219", "endGlowCeiling"],
+		["Object__221", "fence"],["Object__122", "leftColFloor"],["Object__123", "leftColCeiling"],["Object__124", "rightColFloor"],
+		["Object__125", "rightColCeiling"],["Object__99", "spawnFloor"],["Object__102", "spawnWalls"],["Object__101", "spawnDoor"],
+		["Object__100", "spawnCeiling"],["Object__140", "spinnyThing"]];
+			
+		obj.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+
+			for(i=0; i < array.length; i++){
+				if(child.name == array[i][0]){
+					window[array[i][1]] = child.material.clone();
+					child.material = window[array[i][1]];
+				};
+			};
+		});
+		fence.transparent = true;
+	});
+	//DARKEN LEVEL SECTORS
+	function darken(){
+		var array = [[139, 192],[137,192],[142,192],[141,192],[157,176],[160,176],[159,176],[111,128],[109,128],[163,144],[161,144],[132,144],
+			[129,144],[126,144],[119,144],[116,144],[113,128],[134,144],[131,144],[128,144],[121,144],[118,144],[112,144],[103,128],[105,128],
+			[107,128],[108,128],[95,144],[98,144],[97,144],[85,224],[88,224],[87,224],[89,224],[90,192],[93,192],[94,192],[79,144],[81,144],
+			[72,160],[74,160],[46,128],[52,128],[48,128],[49,128],[51,128],[50,128],[208,160],[210,160],[211,160],[169,160],[171,160],
+			[164,144],[167,144],[168,144],[166,144],[190,192],[192,192],[182,192],[181,192],[195,192],[175,144],[176,144],[178,144],[187,160],
+			[189,160],[280,128],[282,128],[299,128],[279,128],[298,128],[277,128],[224,128],[226,128],[296,144],[296,144],[260,128],[263,128],
+			[265,128],[262,128],[257,128],[259,128],[254,128],[256,128],[251,128],[253,128],[248,128],[250,128],[274,128],[276,128],[270,128],
+			[273,128],[272,128],[17,128],[17,128],[19,128],[20,128],[21,128],[23,128],[24,128],[26,128],[27,128],[29,128],[30,128],[32,128],[38,176],
+			[41,176],[40,176],[138,192],[150,192],[140,192],[149,192],[158,176],[110,128],[162,144],[133,144],[130,144],[120,144],[127,144],
+			[117,144],[104,128],[96,144],[86,192],[80,144],[73,160],[47,128],[209,160],[170,160],[165,144],[191,192],[194,192],[180,192],
+			[173,144],[177,144],[188,160],[178,128],[181,128],[225,128],[264,128],[261,128],[258,128],[255,128],[252,128],[275,128],[249,128],
+			[271,128],[18,128],[22,128],[25,128],[28,128],[31,128],[39,176],[114,128],[115,128],[197,144],[174,144]];
+	
+		for(i=0; i < array.length; i++){
+			e1m1Group.traverse(function(child){	
+				if(child.name == "Object__" + array[i][0]){
+					array[i][0] = child.material.clone();
+					child.material = array[i][0];
+					array[i][0].color.setScalar(array[i][1]/256);
+				};
+			});
+		};
+	};
+	//SLIME LAYER
+	UltimateLoader.load("models/slime.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.traverse(function(child){
+			child.userData.altspace = {collider:{enabled: false}};
+		});
+		obj.children[0].material.map.repeat.x = 1/3;
+		obj.position.y = 0.2;
+		slime=obj;
+		sim.scene.add(slime);
+	});
+	// DOOR1 TRIGGER
+	var geometry = new THREE.BoxGeometry(0.7128, 3.92445, 5.7078); // original 0.528, 2.907, 4.228 - multiply by 1.35 to be clickable
+	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+	door1 = new THREE.Mesh(geometry, material);
+	door1.position.set(16.12228, 6.5, -37.43868);
+	door1.addEventListener("cursorup", function(){
+		door1DB.once("value", function(snap){door1set = snap.val();});
+		if(door1set == "down" || !door1set){
+			door1DB.set("up");
+		}else door1DB.set("down");
+	});
+	sim.scene.add(door1);
+
+	//DOOR1 OBJ
+	UltimateLoader.load("models/door1.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.position.set(-16.12228, -6.5, 37.43868);
+		obj.children[0].material.color = new THREE.Color(208/256, 208/256, 208/256);
+		obj.children[1].material.color = new THREE.Color(208/256, 208/256, 208/256);
+		actualDoor1 = obj;
+		door1.add(actualDoor1);
+	});
+	door1UpSound = new NativeComponent('n-sound', {src: "sounds/DoorUp.ogg", minDistance: 3}).addTo(door1);
+	door1DownSound = new NativeComponent('n-sound', {src: "sounds/DoorDown.ogg", minDistance: 3}).addTo(door1);
+	var downLoop1Ani;
+	var upLoop1Ani;
+
+	//DOOR1 ANIMATION
+	door1DB.on("value", function(snapshot){
+		var door1val = snapshot.val();
+
+		function upLoop(){
+			if((Math.round(door1.position.y *100)/100) == 8.75)return;
+			door1.position.y += 0.05;
+			upLoop1Ani = requestAnimationFrame(upLoop);
+		};
+		function downLoop(){
+			if((Math.round(door1.position.y *100)/100) == 6.5)return;
+			door1.position.y -= 0.05;
+			downLoop1Ani = requestAnimationFrame(downLoop);
+		};
+		if(door1val == "up" && (Math.round(door1.position.y *100)/100) < 8.75){
+			door1DownSound.call("pause");
+			door1DownSound.call("seek", {time:0});
+			door1UpSound.call("play");
+			cancelAnimationFrame(downLoop1Ani);
+			upLoop();
+		};
+		if(door1val == "down" && (Math.round(door1.position.y *100)/100) > 6.5){
+			door1UpSound.call("pause");
+			door1UpSound.call("seek", {time:0});
+			door1DownSound.call("play");
+			cancelAnimationFrame(upLoop1Ani);
+			downLoop();
+		};
+	});
+	// DOOR2 TRIGGER
+	var geometry = new THREE.BoxGeometry(1.42695, 8.91945, 5.7078); // original 1.057 6.607 4.228 - multiply by 1.35 to be clickable
+	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+	door2 = new THREE.Mesh(geometry, material);
+	door2.position.set(61.84377, 7.55, 6.96133);
+	door2.addEventListener("cursorup", function(){
+		door2DB.once("value", function(snap){door2set = snap.val();});
+		if(door2set == "down" || !door2set){
+			door2DB.set("up");
+		}else door2DB.set("down");
+	});
+	sim.scene.add(door2);
+
+	//DOOR2 OBJ
+	UltimateLoader.load("models/door2.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.position.set(-61.84377, -7.55, -6.96133);
+		obj.children[0].material.color = new THREE.Color(144/256, 144/256, 144/256);
+		obj.children[1].material.color = new THREE.Color(144/256, 144/256, 144/256);
+		actualDoor2 = obj;
+		door2.add(actualDoor2);
+	});
+	door2UpSound = new NativeComponent('n-sound', {src: "sounds/DoorUp.ogg", minDistance: 3}).addTo(door2);
+	door2DownSound = new NativeComponent('n-sound', {src: "sounds/DoorDown.ogg", minDistance: 3}).addTo(door2);
+	var downLoop2Ani;
+	var upLoop2Ani;
+		
+	//DOOR2 ANIMATION
+	door2DB.on("value", function(snapshot){
+		var door2val = snapshot.val();
+
+		function upLoop(){
+			if((Math.round(door2.position.y *100)/100) == 9.8)return;
+			door2.position.y += 0.05;
+			upLoop2Ani = requestAnimationFrame(upLoop);
+		};	
+		function downLoop(){
+			if((Math.round(door2.position.y *100)/100) == 7.55)return;
+			door2.position.y -= 0.05;
+			downLoop2Ani = requestAnimationFrame(downLoop);
+		};
+		if(door2val == "up" && (Math.round(door2.position.y *100)/100) < 9.8){
+			door2DownSound.call("pause");
+			door2DownSound.call("seek", {time:0});
+			door2UpSound.call("play");
+			cancelAnimationFrame(downLoop2Ani);
+			upLoop();
+		};
+		if(door2val == "down" && (Math.round(door2.position.y *100)/100) > 7.55){
+			door2UpSound.call("pause");
+			door2UpSound.call("seek", {time:0});
+			door2DownSound.call("play");
+			cancelAnimationFrame(upLoop2Ani);
+			downLoop();
+		};
+	});
+	//DOOR3 TRIGGER
+	var geometry = new THREE.BoxGeometry(5.70915, 3.21165, 0.71415); // original 4.229 2.379 0.529 - multiply by 1.35 to be clickable
+	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+	door3 = new THREE.Mesh(geometry, material);
+	door3.position.set(64.48676, 5.4, 13.03983);
+	door3.addEventListener("cursorup", function(){
+		door3DB.once("value", function(snap){door3set = snap.val();});
+		if(door3set == "down" || !door3set){
+			door3DB.set("up");
+		}else door3DB.set("down");
+	});
+	sim.scene.add(door3);
+
+	//DOOR3 OBJ
+	UltimateLoader.load("models/door3.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.position.set(-64.48676, -5.4, -13.03983);
+		obj.children[0].material.color = new THREE.Color(228/256, 228/256, 228/256);
+		obj.children[1].material.color = new THREE.Color(228/256, 228/256, 228/256);
+		actualDoor3 = obj;
+		door3.add(actualDoor3);
+	});
+	door3UpSound = new NativeComponent('n-sound', {src: "sounds/DoorUp.ogg", minDistance: 3}).addTo(door3);
+	door3DownSound = new NativeComponent('n-sound', {src: "sounds/DoorDown.ogg", minDistance: 3}).addTo(door3);
+	var downLoop3Ani;
+	var upLoop3Ani;
+	
+	//DOOR3 ANIMATION
+	door3DB.on("value", function(snapshot){
+		var door3val = snapshot.val();
+
+		function upLoop(){
+			if((Math.round(door3.position.y *100)/100) == 7.65)return;
+			door3.position.y += 0.05;
+			upLoop3Ani = requestAnimationFrame(upLoop);
+		};
+		function downLoop(){
+			if((Math.round(door3.position.y *100)/100) == 5.4)return;
+			door3.position.y -= 0.05;
+			downLoop3Ani = requestAnimationFrame(downLoop);
+		};
+		if(door3val == "up" && (Math.round(door3.position.y *100)/100) < 7.65){
+			door3DownSound.call("pause");
+			door3DownSound.call("seek", {time:0});
+			door3UpSound.call("play");
+			cancelAnimationFrame(downLoop3Ani);
+			upLoop();
+		};
+		if(door3val == "down" && (Math.round(door3.position.y *100)/100) > 5.4){
+			door3UpSound.call("pause");
+			door3UpSound.call("seek", {time:0});
+			door3DownSound.call("play");
+			cancelAnimationFrame(upLoop3Ani);
+			downLoop();
+		};
+	});
+	//DOOR4 TRIGGER
+	var geometry = new THREE.BoxGeometry(2.85525, 3.21165, 0.71415); // original 2.115 2.379 0.529 - multiply by 1.35 to be clickable
+	var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+	door4 = new THREE.Mesh(geometry, material);
+	door4.position.set(64.48676, 5.4, 33.38983);
+	door4.addEventListener("cursorup", function(){
+		door4DB.once("value", function(snap){door4set = snap.val();});
+		if(door4set == "down" || !door4set){
+			door4DB.set("up");
+		}else door4DB.set("down");
+	});
+	sim.scene.add(door4);
+
+	//DOOR4 OBJ
+	UltimateLoader.load("models/door4.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.position.set(-64.48676, -5.4, -33.38983);
+		actualDoor4 = obj;
+		door4.add(actualDoor4);
+	});
+	door4UpSound = new NativeComponent('n-sound', {src: "sounds/DoorUp.ogg", minDistance: 3}).addTo(door4);
+	door4DownSound = new NativeComponent('n-sound', {src: "sounds/DoorDown.ogg", minDistance: 3}).addTo(door4);
+	var downLoop4Ani;
+	var upLoop4Ani;
+	
+	//DOOR4 ANIMATION
+	door4DB.on("value", function(snapshot){
+		var door4val = snapshot.val();
+
+		function upLoop(){
+			if((Math.round(door4.position.y *100)/100) == 7.65)return;
+			door4.position.y += 0.05;
+			upLoop4Ani = requestAnimationFrame(upLoop);
+		};
+		function downLoop(){
+			if((Math.round(door4.position.y *100)/100) == 5.4)return;
+			door4.position.y -= 0.05;
+			downLoop4Ani = requestAnimationFrame(downLoop);
+		};
+		if(door4val == "up" && (Math.round(door4.position.y *100)/100) < 7.65){
+			door4DownSound.call("pause");
+			door4DownSound.call("seek", {time:0});
+			door4UpSound.call("play");
+			cancelAnimationFrame(downLoop4Ani);
+			upLoop();
+		};
+		if(door4val == "down" && (Math.round(door4.position.y *100)/100) > 5.4){
+			door4UpSound.call("pause");
+			door4UpSound.call("seek", {time:0});
+			door4DownSound.call("play");
+			cancelAnimationFrame(upLoop4Ani);
+			downLoop();
+		};
+	});
+	// COLLISION RAMPS
+	UltimateLoader.load("models/ramps.obj", function(obj){
+		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
+		obj.traverse(function(child){child.userData.altspace = {collider:{enabled: true}}});
+		obj.children[0].material.opacity = 0;
+		obj.children[0].material.transparent = true;
+		sim.scene.add(obj);
+	});
+	// TRANSPARENT WALL
+	UltimateLoader.load("models/wall.obj", function(obj){
+		obj.traverse(function(child){child.userData.altspace = {collider:{enabled: true}}});
+		obj.children[0].material.opacity = 0.9;
+		obj.children[0].material.transparent = true;
+		obj.children[0].material.color = new THREE.Color(192/256, 192/256, 192/256);
+		sim.scene.add(obj);
+	});
+	//LAMPS
+	lamps(-17.48202 , 5.528, -15.89706);
+	lamps(-17.48202 , 5.528, -10.3725);
+	lamps(57.81093 , 5, -19.58708);
+	lamps(72.18862 , 5, -19.58708);
+	lamps(60.93755 , 5, 17.91993);
+	lamps(68.01082 , 5, 17.91993);
+	lamps(54.67568 , 5, 23.95352);
+	lamps(74.26427 , 5, 23.95352);
+		
+	function lamps(x, y, z){
+		UltimateLoader.load("models/e1m1/COLUA0.png", function(texture){
+			var geometry = new THREE.PlaneGeometry(0.92, 1.92);
+			var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+			var plane = new THREE.Mesh(geometry, material);
+			plane.scale.multiplyScalar(0.80);
+			plane.position.set(x, y, z);
+			var billboard = new NativeComponent('n-billboard', null, plane).addTo(sim.scene);
+		});
+	};
+	//COLUMNS
+	UltimateLoader.load("models/e1m1/ELECA0.png", function(texture){
+		var geometry = new THREE.PlaneGeometry(1.52, 5.12);
+		var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+		column1 = new THREE.Mesh(geometry, material);
+		column1.scale.multiplyScalar(0.90);
+		column2 = new THREE.Mesh;
+		column2 = column1.clone();
+		column1.position.set(-25.37073 ,8.6, -17.3527);
+		column2.position.set(-25.37073 ,8.6, -8.89570);
+		var column1Board = new NativeComponent('n-billboard', null, column1).addTo(sim.scene);
+		var column2Board = new NativeComponent('n-billboard', null, column2).addTo(sim.scene);
+	});
+	//CANDELABRAS
+	UltimateLoader.load("models/e1m1/CBRAA0.png", function(texture){
+		var geometry = new THREE.PlaneGeometry(1.16, 2.44);
+		var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+		candelabra1 = new THREE.Mesh(geometry, material);
+		candelabra1.scale.multiplyScalar(0.80);
+		candelabra2 = new THREE.Mesh;
+		candelabra2 = candelabra1.clone();
+		candelabra1.position.set(61.81361 ,5.2, 29.73551);
+		candelabra2.position.set(67.1118 ,5.2, 29.73551);
+		var candelabra1Board = new NativeComponent('n-billboard', null, candelabra1).addTo(sim.scene);
+		var candelabra2Board = new NativeComponent('n-billboard', null, candelabra2).addTo(sim.scene);
+	});
+	//BARRELS
+	addBarrel(0, -6.171 ,5.52856, -9.69775);
+	addBarrel(1, 8.13129 ,4.99957, -12.16677);
+	addBarrel(2, 3.4337 ,5.52856, -23.78048);
+	addBarrel(3, 62.50485 ,4.73559, 22.92304);
+	addBarrel(4, 58.10878 ,4.73559, 20.39379);
+	addBarrel(5, 70.51413 ,4.73559, 19.8217);
+	
+	function addBarrel(num, x, y, z){
+		UltimateLoader.load("models/e1m1/BARREL.png", function(texture){
+			var geometry = new THREE.PlaneGeometry(1, 1.36);
+			var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+			var plane1 = new THREE.Mesh(geometry, material);
+			plane1.material.map.repeat.x = 1/2;
+			plane1.scale.multiplyScalar(0.80);
+			plane1.position.set(x, y, z);
+			var billboard = new NativeComponent('n-billboard', null, plane1).addTo(sim.scene);
+			barrel.children[num] = billboard;
+			barrel.children[num + 50] = firebase.database().ref("Barrels/barrel" + num );
+			barrel.children[num].object.addEventListener('cursorup', function(){
+				barrel.children[num + 50].once("value", function(snapshot){
+					barrelState = snapshot.val();
+					if(barrelState == "here" || !barrelState){
+						barrel.children[num + 50].set("gone")
+					};
+				});
+			});
+			barrel.children[num].object.userData.altspace = {collider: {enabled: true}};
+			
+			UltimateLoader.load("models/e1m1/EXPLOSION.png", function(texture){ //BARREL EXPLOSION
+				var geometry = new THREE.PlaneGeometry(2.40, 2.12);
+				var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+				plane2 = new THREE.Mesh(geometry, material);
+				plane2.material.map.repeat.x = 1/3;
+				plane2.scale.multiplyScalar(0.80);
+				var billboard = new NativeComponent('n-billboard', null, plane2).addTo(sim.scene);
+				barrel.children[num + 10] = billboard; //1x are explosions
+				barrel.children[num + 10].object.position.copy(barrel.children[num].object.position);
+				barrel.children[num + 10].object.position.y +=.35;
+				barrel.children[num + 10].object.visible = false;
+				
+				UltimateLoader.load("models/e1m1/RESPAWN.png", function(texture){ //BARREL RESPAWN
+					var geometry = new THREE.PlaneGeometry(1.60, 1.48);
+					var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+					plane3 = new THREE.Mesh(geometry, material);
+					plane3.material.map.repeat.x = 1/5;
+					plane3.scale.multiplyScalar(0.80);
+					var billboard = new NativeComponent('n-billboard', null, plane3).addTo(sim.scene);
+					barrel.children[num + 20] = billboard; //2x are respawns //3x are sound locations
+					barrel.children[num + 20].object.position.copy(barrel.children[num].object.position);
+					barrel.children[num + 20].object.visible = false;
+					
+					barrel.children[num + 30] = new NativeComponent('n-sound', {volume: 1, src: "sounds/Explosion.ogg", minDistance: 3}).addTo(sim.scene);
+					barrel.children[num + 30].object.position.copy(barrel.children[num].object.position);
+					
+					barrel.children[num + 40] = new NativeComponent('n-sound', {volume: 1, src: "sounds/Respawn.ogg", minDistance: 3}).addTo(sim.scene);
+					barrel.children[num + 40].object.position.copy(barrel.children[num].object.position);	
+					(function animate(){
+						requestAnimationFrame(animate);
+						if(parseInt(String(Date.now()).slice(10,13)) >500){
+							plane1.material.map.offset.x = 0.5;
+						}else{
+							plane1.material.map.offset.x = 0;
+						};
+					}());
+				});
+			});
+		});
+	};
+	//WATCH DB FOR BARREL CHANGES		
+	firebase.database().ref("Barrels/barrel0").on("value", function(snapshot){
+		barrel0State = snapshot.val();
+		if(barrel0State == "gone"){barrelAction(0)};
+	});	
+	firebase.database().ref("Barrels/barrel1").on("value", function(snapshot){
+		barrel1State = snapshot.val();
+		if(barrel1State == "gone"){barrelAction(1)};
+	});	
+	firebase.database().ref("Barrels/barrel2").on("value", function(snapshot){
+		barrel2State = snapshot.val();
+		if(barrel2State == "gone"){barrelAction(2)};
+	});	
+	firebase.database().ref("Barrels/barrel3").on("value", function(snapshot){
+		barrel3State = snapshot.val();
+		if(barrel3State == "gone"){barrelAction(3)};
+	});	
+	firebase.database().ref("Barrels/barrel4").on("value", function(snapshot){
+		barrel4State = snapshot.val();
+		if(barrel4State == "gone"){barrelAction(4)};
+	});	
+	firebase.database().ref("Barrels/barrel5").on("value", function(snapshot){
+		barrel5State = snapshot.val();
+		if(barrel5State == "gone"){barrelAction(5)};
+	});	
+		
+	var sphereCollider = new NativeComponent('n-sphere-collider', {radius: 3} , null).addTo(sim.scene);
+	sphereCollider.object.position.y = -1000;
+	
+	//BARREL EXPLOSION ANIMATION
+	function barrelAction(num){
+		var counter = Date.now();
+		barrel.children[num + 30].call("play");
+		(function loop(){
+			var curTime = Date.now();
+			if(curTime - counter > 30650){
+				barrel.children[num + 50].set("here");
+				barrel.children[num + 20].object.visible = false;
+				barrel.children[num].object.visible = true;
+				firebase.database().ref("Barrels/barrel" + num ).set("here");
+				return;
+			}else if(curTime - counter > 30600){
+				barrel.children[num + 20].object.material.map.offset.x = 4/5;
+			}else if(curTime - counter > 30500){
+				barrel.children[num + 20].object.material.map.offset.x = 3/5;
+			}else if(curTime - counter > 30400){
+				barrel.children[num + 20].object.material.map.offset.x = 2/5;
+			}else if(curTime - counter > 30300){
+				barrel.children[num + 20].object.material.map.offset.x = 1/5;
+			}else if(curTime - counter > 30200){
+				barrel.children[num + 20].object.material.map.offset.x = 0/5;
+			}else if(curTime - counter > 30100){
+				barrel.children[num + 20].object.material.map.offset.x = 1/5;
+			}else if(curTime - counter > 30000){
+				barrel.children[num + 40].call("play");
+				barrel.children[num + 20].object.material.map.offset.x = 0/5;
+				barrel.children[num + 20].object.visible = true;
+			}else if(curTime - counter > 600){
+				barrel.children[num + 10].object.visible = false;
+				sphereCollider.object.position.y = -1000;
+			}else if(curTime - counter > 400){
+				barrel.children[num + 10].object.material.map.offset.x = 2/3;
+			}else if(curTime - counter > 200){
+				barrel.children[num + 10].object.material.map.offset.x = 1/3;
+			}else{
+				sphereCollider.object.position.copy(barrel.children[num].object.position);
+				barrel.children[num].object.visible = false;
+				barrel.children[num + 10].object.visible = true;
+				barrel.children[num + 10].object.material.map.offset.x = 0/3;
+			};
+			requestAnimationFrame(loop);
+		}());
+	};
+	//EVERYTHING LOADED BEFORE REMOVE ELEVATOR
+	(function animateYet(){
+		THREE.DefaultLoadingManager.onProgress = function(item, loaded, total){
+			if(loaded == total){
+				sim.scene.remove(elevator);
+				var musicPoint = new THREE.Object3D(0,6,0);
+				sim.scene.add(musicPoint);
+				//var music = new NativeComponent('n-sound', {autoplay: true, src: "sounds/E1M1.ogg", loop: true}).addTo(musicPoint);
+				animate();
+				return;
+			};
+		};
+		requestAnimationFrame(animateYet);
+	})();
+	//ANIMATION LOOP
+	function animate(){
+		requestAnimationFrame(animate);
+		curTime = Date.now();
+		
+		spinnyThing.map.offset.x += 0.005;
+		
+		//COLUMN PULSATE LIGHT
+		glowState = 0.75+0.25*Math.sin(angle += .1);
+		column1.material.color.setScalar(glowState);
+		column2.material.color.setScalar(glowState);
+		
+		leftColFloor.color.setScalar(glowState);
+		leftColCeiling.color.setScalar(glowState);
+		rightColFloor.color.setScalar(glowState);
+		rightColCeiling.color.setScalar(glowState);
+		
+		//END ROOM BLINK
+		if(String(curTime).charAt(10) == "0"){
+			endGlowFloor.color.setScalar(1);
+			endGlowWalls.color.setScalar(1);
+			endGlowCeiling.color.setScalar(1);
+			fence.color.setScalar(1);
+		}else{
+			endGlowFloor.color.setScalar(0.5);
+			endGlowWalls.color.setScalar(0.5);
+			endGlowCeiling.color.setScalar(0.5);
+			fence.color.setScalar(0.5);
+		};
+		
+		//SPAWN DOOR BLINK
+		if(String(curTime).charAt(12) == "0"){
+			spawnFloor.color.setScalar(1);
+			spawnWalls.color.setScalar(1);
+			spawnDoor.color.setScalar(1);
+			spawnCeiling.color.setScalar(1);		
+		}else{
+			spawnFloor.color.setScalar(0.5625);
+			spawnWalls.color.setScalar(0.5625);
+			spawnDoor.color.setScalar(0.5625);
+			spawnCeiling.color.setScalar(0.5625);
+	
+		};
+		
+		//SLIME ANIMATION
+		if(frame==1){
+			slime.children[0].material.map.offset.x = 0;
+			if(curTime > timer + 300){
+				timer = curTime;
+				frame = 2;
+			};
+		}else if(frame==2){
+			slime.children[0].material.map.offset.x = 1/3;
+			if(curTime > timer + 300){
+				timer = curTime;
+				frame = 3;
+			};
+		}else if(frame==3){
+			slime.children[0].material.map.offset.x = 2/3;
+			if(curTime > timer + 300){
+				timer = curTime;
+				frame = 1;
+			};
+		};
+		//sim.scene.scale.set(3+2*Math.cos(angle2 += 0.005), 1, 3+2*Math.cos(angle2));
+	};
+};
+</script></body></html>
