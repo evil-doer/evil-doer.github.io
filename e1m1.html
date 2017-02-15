@@ -38,8 +38,9 @@ var door4DB = firebase.database().ref("Doors/door4");
 			};
 		};
 	};
+    if(done)return;
 	animate();
-	if(done)return;
+
 }());
 
 function main(){
@@ -493,8 +494,8 @@ function main(){
 	firebase.database().ref("Barrels/barrel5").on("value", function(snapshot){
 		barrel5State = snapshot.val();
 		if(barrel5State == "gone"){barrelAction(5)};
-	});	
-		
+	});
+
 	var sphereCollider = new NativeComponent('n-sphere-collider', {radius: 3} , null).addTo(sim.scene);
 	sphereCollider.object.position.y = -1000;
 	
