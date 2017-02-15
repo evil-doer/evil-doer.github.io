@@ -36,8 +36,8 @@
       <file leaf-file-name="sana.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sana.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="196" column="58" lean-forward="true" selection-start-line="196" selection-start-column="58" selection-end-line="196" selection-end-column="58" />
+            <state relative-caret-position="4422">
+              <caret line="201" column="64" lean-forward="false" selection-start-line="201" selection-start-column="59" selection-end-line="201" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -63,8 +63,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="135" />
-    <option name="y" value="40" />
+    <option name="x" value="162" />
+    <option name="y" value="16" />
     <option name="width" value="1458" />
     <option name="height" value="1000" />
   </component>
@@ -186,7 +186,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486878629068</updated>
-      <workItem from="1486878630715" duration="3833000" />
+      <workItem from="1486878630715" duration="5049000" />
     </task>
     <task id="LOCAL-00001" summary="asdf">
       <created>1487136577341</created>
@@ -199,7 +199,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3833000" />
+    <option name="totallyTimeSpent" value="5049000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -211,7 +211,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="135" y="40" width="1458" height="1000" extended-state="0" />
+    <frame x="162" y="16" width="1458" height="1000" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12373737" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -259,8 +259,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sana.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="196" column="58" lean-forward="true" selection-start-line="196" selection-start-column="58" selection-end-line="196" selection-end-column="58" />
+        <state relative-caret-position="4422">
+          <caret line="201" column="64" lean-forward="false" selection-start-line="201" selection-start-column="59" selection-end-line="201" selection-end-column="64" />
           <folding />
         </state>
       </provider>
