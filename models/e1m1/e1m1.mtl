@@ -1,0 +1,195 @@
+newmtl Material__10
+Kd 1 1 1
+map_Kd FLAT20.png
+
+newmtl Material__11
+Kd 1 1 1
+map_Kd FLOOR5_1.png
+
+newmtl Material__12
+Kd 1 1 1
+map_Kd CEIL5_2.png
+
+newmtl Material__13
+Kd 1 1 1
+map_Kd BROWN1.png
+
+newmtl Material__14
+Kd 1 1 1
+map_Kd SUPPORT2.png
+
+newmtl Material__15
+Kd 1 1 1
+map_Kd LITE3.png
+
+newmtl Material__16
+Kd 1 1 1
+map_Kd CEIL3_5.png
+
+newmtl Material__17
+Kd 1 1 1
+map_Kd COMPTALL.png
+
+newmtl Material__18
+Kd 1 1 1
+map_Kd COMPSPAN.png
+
+newmtl Material__19
+Kd 1 1 1
+map_Kd STARGR1.png
+
+newmtl Material__2
+Kd 1 1 1
+map_Kd BROWN144.png
+
+newmtl Material__20
+Kd 1 1 1
+map_Kd COMPTILE.png
+
+newmtl Material__21
+Kd 1 1 1
+map_Kd STEP1.png
+
+newmtl Material__22
+Kd 1 1 1
+map_Kd PLANET1.png
+
+newmtl Material__23
+Kd 1 1 1
+map_Kd TLITE6_5.png
+
+newmtl Material__24
+Kd 1 1 1
+map_Kd FLAT14.png
+
+newmtl Material__25
+Kd 1 1 1
+map_Kd FLAT18.png
+
+newmtl Material__26
+Kd 1 1 1
+map_Kd COMPUTE2.png
+
+newmtl Material__27
+Kd 1 1 1
+map_Kd TLITE6_4.png
+
+newmtl Material__28
+Kd 1 1 1
+map_Kd STEP6.png
+
+newmtl Material__29
+Kd 1 1 1
+map_Kd DOOR2_5.png
+
+newmtl Material__3
+Kd 1 1 1
+map_Kd FLOOR7_1.png
+
+newmtl Material__30
+Kd 1 1 1
+map_Kd DOORTRAK.png
+
+newmtl Material__31
+Kd 1 1 1
+map_Kd FLOOR7_2.png
+
+newmtl Material__32
+Kd 1 1 1
+map_Kd STARG3.png
+
+newmtl Material__33
+Kd 1 1 1
+map_Kd SLADWALL.png
+
+newmtl Material__34
+Kd 1 1 1
+map_Kd TEKWALL4.png
+
+newmtl Material__35
+Kd 1 1 1
+map_Kd SW1COMP.png
+
+newmtl Material__36
+Kd 1 1 1
+map_Kd STEP2.png
+
+newmtl Material__37
+Kd 1 1 1
+map_Kd TLITE6_1.png
+
+newmtl Material__38
+Kd 1 1 1
+map_Kd TEKWALL1.png
+
+newmtl Material__39
+Kd 1 1 1
+map_Kd FLOOR1_1.png
+
+newmtl Material__4
+Kd 1 1 1
+map_Kd STARTAN3.png
+
+newmtl Material__40
+Kd 1 1 1
+map_Kd FLOOR5_2.png
+
+newmtl Material__41
+Kd 1 1 1
+map_Kd BROWNGRN.png
+
+newmtl Material__42
+Kd 1 1 1
+map_Kd NUKEDGE.png
+
+newmtl Material__43
+Kd 1 1 1
+map_Kd FLOOR6_2.png
+
+newmtl Material__44
+Kd 1 1 1
+map_Kd BRNBIG.png
+
+newmtl Material__47
+Kd 1 1 1
+map_Kd STARTAN1.png
+
+newmtl Material__48
+Kd 1 1 1
+map_Kd EXITSIGN.png
+
+newmtl Material__49
+Kd 1 1 1
+map_Kd FLAT23.png
+
+newmtl Material__5
+Kd 1 1 1
+map_Kd FLOOR4_8.png
+
+newmtl Material__50
+Kd 1 1 1
+map_Kd EXITDOOR.png
+
+newmtl Material__51
+Kd 1 1 1
+map_Kd SW1STRTN.png
+
+newmtl Material__52
+Kd 1 1 1
+map_Kd TLITE6_6.png
+
+newmtl Material__6
+Kd 1 1 1
+map_Kd CEIL5_1.png
+
+newmtl Material__7
+Kd 1 1 1
+map_Kd COMPUTE3.png
+
+newmtl Material__8
+Kd 1 1 1
+map_Kd FLAT5_5.png
+
+newmtl Material__9
+Kd 1 1 1
+map_Kd DOORSTOP.png

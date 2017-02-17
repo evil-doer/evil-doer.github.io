@@ -1,0 +1,7 @@
+newmtl Material__54
+Kd 1 1 1
+map_Kd BROWN96.png
+
+newmtl Material__8
+Kd 1 1 1
+map_Kd FLAT5_5.png

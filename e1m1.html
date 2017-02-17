@@ -22,7 +22,7 @@ var door4DB = firebase.database().ref("Doors/door4");
 //LIFT AND HOLD USER UNTIL LEVEL IS LOADED
 (function holdingBox(){
 	var done = false;
-	UltimateLoader.load("models/elevator.obj", function(obj){
+	UltimateLoader.load("models/e1m1/elevator.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.children[0].material.opacity = 0.3;
 		obj.children[0].material.transparent = true;
@@ -49,8 +49,7 @@ function main(){
 		headTrack = skeleton.getJoint("Head");
 	});
 	//SKY SPHERE
-	var loader = new THREE.TextureLoader();
-	loader.load("models/SKY1.jpg", function(texture){
+	UltimateLoader.load("images/e1m1/SKY1.jpg", function(texture){
 		var geometry = new THREE.SphereGeometry(2000, 32, 32); 
 		var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.BackSide});
 		sky = new THREE.Mesh(geometry, material);
@@ -107,7 +106,7 @@ function main(){
 		};
 	};
 	//SLIME LAYER
-	UltimateLoader.load("models/slime.obj", function(obj){
+	UltimateLoader.load("models/e1m1/slime.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.traverse(function(child){
 			child.userData.altspace = {collider:{enabled: false}};
@@ -470,7 +469,7 @@ function main(){
 			});
 		});
 	};
-	//WATCH DB FOR BARREL CHANGES		
+	//WATCH DB FOR BARREL CHANGES
 	firebase.database().ref("Barrels/barrel0").on("value", function(snapshot){
 		barrel0State = snapshot.val();
 		if(barrel0State == "gone"){barrelAction(0)};
@@ -495,7 +494,7 @@ function main(){
 		barrel5State = snapshot.val();
 		if(barrel5State == "gone"){barrelAction(5)};
 	});
-
+	
 	var sphereCollider = new NativeComponent('n-sphere-collider', {radius: 3} , null).addTo(sim.scene);
 	sphereCollider.object.position.y = -1000;
 	

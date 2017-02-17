@@ -1,0 +1,7 @@
+newmtl Material__10
+Kd 1 1 1
+map_Kd e1m1\FLAT20.png
+
+newmtl Material__55
+Kd 1 1 1
+map_Kd BIGDOOR4.png
