@@ -56,7 +56,7 @@ function main(){
 		sim.scene.add(sky);
 	});
 	//MAIN LEVEL
-	UltimateLoader.load("models/e1m1.obj", function(obj){
+	UltimateLoader.load("models/e1m1/e1m1.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		e1m1Group = obj;
 		sim.scene.add(e1m1Group);
@@ -130,7 +130,7 @@ function main(){
 	sim.scene.add(door1);
 
 	//DOOR1 OBJ
-	UltimateLoader.load("models/door1.obj", function(obj){
+	UltimateLoader.load("models/e1m1/door1.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-16.12228, -6.5, 37.43868);
 		obj.children[0].material.color = new THREE.Color(208/256, 208/256, 208/256);
@@ -186,7 +186,7 @@ function main(){
 	sim.scene.add(door2);
 
 	//DOOR2 OBJ
-	UltimateLoader.load("models/door2.obj", function(obj){
+	UltimateLoader.load("models/e1m1/door2.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-61.84377, -7.55, -6.96133);
 		obj.children[0].material.color = new THREE.Color(144/256, 144/256, 144/256);
@@ -242,7 +242,7 @@ function main(){
 	sim.scene.add(door3);
 
 	//DOOR3 OBJ
-	UltimateLoader.load("models/door3.obj", function(obj){
+	UltimateLoader.load("models/e1m1/door3.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-64.48676, -5.4, -13.03983);
 		obj.children[0].material.color = new THREE.Color(228/256, 228/256, 228/256);
@@ -298,7 +298,7 @@ function main(){
 	sim.scene.add(door4);
 
 	//DOOR4 OBJ
-	UltimateLoader.load("models/door4.obj", function(obj){
+	UltimateLoader.load("models/e1m1/door4.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.position.set(-64.48676, -5.4, -33.38983);
 		actualDoor4 = obj;
@@ -339,7 +339,7 @@ function main(){
 		};
 	});
 	// COLLISION RAMPS
-	UltimateLoader.load("models/ramps.obj", function(obj){
+	UltimateLoader.load("models/e1m1/ramps.obj", function(obj){
 		var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, obj);
 		obj.traverse(function(child){child.userData.altspace = {collider:{enabled: true}}});
 		obj.children[0].material.opacity = 0;
@@ -347,7 +347,7 @@ function main(){
 		sim.scene.add(obj);
 	});
 	// TRANSPARENT WALL
-	UltimateLoader.load("models/wall.obj", function(obj){
+	UltimateLoader.load("models/e1m1/wall.obj", function(obj){
 		obj.traverse(function(child){child.userData.altspace = {collider:{enabled: true}}});
 		obj.children[0].material.opacity = 0.9;
 		obj.children[0].material.transparent = true;
