@@ -1,0 +1,189 @@
+<html><head><title></title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/1.0.0/altspace.min.js"></script>
+</head><body><script>
+
+var sim = altspace.utilities.Simulation();
+
+altspace.getEnclosure().then(function(enclosure){
+	enclosure.requestFullspace();
+	altspace.getGamepads();
+	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+		headTrack = skeleton.getJoint("Eye");
+		
+		//proximity indicators
+		var geometry = new THREE.SphereGeometry(0.04, 20, 12); 
+		var material = new THREE.MeshBasicMaterial({color: "green", side: THREE.FrontSide});
+		leftSphere = new THREE.Mesh(geometry, material);
+		rightSphere = leftSphere.clone();
+		sim.scene.add(leftSphere, rightSphere);
+		
+		//calibration ring
+		UltimateLoader.load("models/ring.obj", function(obj){sim.scene.add(obj)});
+		
+		//boxes to move player while climbing
+		var moveBox = new THREE.Object3D();
+		sim.scene.add(moveBox);
+		var boxConfigN = {size: {"x": .62, "y": .62, "z": .62}, center: {"x": 0, "y": .31, "z": -.62}};
+		var boxConfigE = {size: {"x": .62, "y": .62, "z": .62}, center: {"x": .62, "y": .31, "z": 0}};
+		var boxConfigS = {size: {"x": .62, "y": .62, "z": .62}, center: {"x": 0, "y": .31, "z": .62}};
+		var boxConfigW = {size: {"x": .62, "y": .62, "z": .62}, center: {"x": -.62, "y": .31, "z": 0}};
+		var boxConfigF = {size: {"x": 1.24, "y": 1.24, "z": 1.24}, center: {"x": 0, "y": -.62, "z": 0}};
+		var box = new NativeComponent("n-box-collider", boxConfigN).addTo(moveBox);
+		var box = new NativeComponent("n-box-collider", boxConfigE).addTo(moveBox);
+		var box = new NativeComponent("n-box-collider", boxConfigS).addTo(moveBox);
+		var box = new NativeComponent("n-box-collider", boxConfigW).addTo(moveBox);
+		var box = new NativeComponent("n-box-collider", boxConfigF).addTo(moveBox);
+		
+		//invisible building structure
+		UltimateLoader.load("models/building.obj", function(obj){
+			obj.children[0].material.visible = false;
+			obj.traverse(function(child){
+				child.userData.altspace = {collider:{enabled: false}};
+			});
+			building = obj;
+			sim.scene.add(building);
+			
+			//click to calibrate text
+			var textConfig = {fontSize: 3, text: "Click to\nCalibrate"};
+			var clickText = new NativeComponent("n-text", textConfig).addTo(sim.scene);
+			clickText.object.position.set(-4.54, 1.91, -7.91);
+			clickText.object.rotation.y = THREE.Math.degToRad(45);
+
+			//box around text for clicks			
+			var clickBoxConfig = {type: "hologram", size: {"x": 1.5, "y": .7, "z": .1}};
+			var clickBox = new NativeComponent("n-box-collider", clickBoxConfig).addTo(sim.scene);
+			clickBox.object.position.set(-4.54, 1.91, -7.91);
+			clickBox.object.rotation.y = THREE.Math.degToRad(45);
+			clickBox.object.addEventListener("cursorup", function(){
+				gamepads = altspace.getGamepads();
+				heightOffset = headTrack.position.y - .404;
+				gripState();
+				gripAction1();
+				gripAction2();
+			});
+		
+			var gp1Button = false;
+			var gp2Button = false;
+			
+			//is grip pressed or not
+			function gripState(){
+				if(gamepads[1].buttons[1].value > .5)gp1Grip = true;
+				else gp1Grip = false;
+				if(gamepads[2].buttons[1].value > .5)gp2Grip = true;
+				else gp2Grip = false;
+				requestAnimationFrame(gripState);
+			};
+			
+			var inLoop1 = false;
+			var inLoop2 = false;
+			
+			//left grip action
+			function gripAction1(){
+				var headPos = new THREE.Vector3;
+				var gpPos = new THREE.Vector3;
+				var freeze = new THREE.Vector3;
+				
+				var gamepadPos = new THREE.Object3D;
+				gamepadPos.position.copy(gamepads[1].position);
+				gamepadPos.quaternion.copy(gamepads[1].rotation);
+				gamepadPos.translateX(.04);
+				gamepadPos.translateY(-.03);
+				gamepadPos.translateZ(-.05);
+				
+				var handDirection = new THREE.Vector3(-1,0,0);
+				handDirection.applyQuaternion(gamepads[1].rotation);
+			
+				var ray = new THREE.Raycaster(gamepadPos.position, handDirection);
+				var collisionResults = ray.intersectObjects(building.children);
+
+				leftSphere.position.y = -100;
+				
+				if(collisionResults[0]){
+					if(gamepadPos.position.distanceTo(collisionResults[0].point) < 0.1 && !gp1Grip){
+						leftSphere.position.copy(gamepadPos.position);
+						
+					};
+					
+					if(gp1Grip && !inLoop1 && gamepadPos.position.distanceTo(collisionResults[0].point) < 0.1){
+						freeze.copy(gamepads[1].position);
+						loop();
+					};
+				};
+				
+				if(!gp1Grip && !inLoop2)moveBox.position.y = -100;
+
+				function loop(){
+					inLoop1 = true;
+					if(!gp1Grip){
+						inLoop1 = false;
+						return;
+					}
+					headPos.copy(headTrack.position);
+					headPos.y -= heightOffset;
+					gpPos.copy(gamepads[1].position);
+					headPos.sub(gpPos.sub(freeze));
+					
+					moveBox.position.copy(headPos);
+			
+					requestAnimationFrame(loop);
+				};
+				requestAnimationFrame(gripAction1);
+			};
+			//right grip action
+			function gripAction2(){
+				var headPos = new THREE.Vector3;
+				var gpPos = new THREE.Vector3;
+				var freeze = new THREE.Vector3;
+				
+				var gamepadPos = new THREE.Object3D;
+				gamepadPos.position.copy(gamepads[2].position);
+				gamepadPos.quaternion.copy(gamepads[2].rotation);
+				gamepadPos.translateX(-.04);
+				gamepadPos.translateY(-.03);
+				gamepadPos.translateZ(-.05);
+				
+				var handDirection = new THREE.Vector3(1,0,0);
+				handDirection.applyQuaternion(gamepads[2].rotation);
+			
+				var ray = new THREE.Raycaster(gamepadPos.position, handDirection);
+				var collisionResults = ray.intersectObjects(building.children);
+
+				rightSphere.position.y = -100;
+				
+				if(collisionResults[0]){
+					if(gamepadPos.position.distanceTo(collisionResults[0].point) < 0.1 && !gp2Grip){
+						rightSphere.position.copy(gamepadPos.position);
+					};
+
+					if(gp2Grip && !inLoop2 && gamepadPos.position.distanceTo(collisionResults[0].point) < 0.1){
+						freeze.copy(gamepads[2].position);
+						loop();
+					};
+				};
+				
+				if(!inLoop1 && !gp2Grip)moveBox.position.y = -100;
+
+				function loop(){
+					inLoop2 = true;
+					if(!gp2Grip){
+						inLoop2 = false;
+						return;
+					}
+					headPos.copy(headTrack.position);
+					headPos.y -= heightOffset;
+					gpPos.copy(gamepads[2].position);
+					headPos.sub(gpPos.sub(freeze));
+					
+					moveBox.position.copy(headPos);
+			
+					requestAnimationFrame(loop);
+				};
+				requestAnimationFrame(gripAction2);
+			};
+		});
+	});
+});
+</script></body></html>
