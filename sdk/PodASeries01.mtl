@@ -1,0 +1,7 @@
+newmtl None
+Kd 1 1 1
+map_Kd PodASeries01_diff_highlight.png
+
+newmtl None_PodASeries01_diff.png
+Kd 1 1 1
+map_Kd PodASeries01_diff.png

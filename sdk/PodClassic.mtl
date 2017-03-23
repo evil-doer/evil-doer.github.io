@@ -1,0 +1,7 @@
+newmtl None
+Kd 1 1 1
+map_Kd PodClassic_glow.png
+
+newmtl None_PodClassic_diff.png
+Kd 1 1 1
+map_Kd PodClassic_diff.png

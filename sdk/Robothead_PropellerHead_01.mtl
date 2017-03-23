@@ -1,0 +1,7 @@
+newmtl None
+Kd 1 1 1
+map_Kd Robothead_PropellerHead_01_diff_highlight.png
+
+newmtl None_Robothead_PropellerHead_01_diff.png
+Kd 1 1 1
+map_Kd Robothead_PropellerHead_01_diff.png

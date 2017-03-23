@@ -1,0 +1,592 @@
+<html><head><title>sdk</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/2.0.3/altspace.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+<script src="https://cdn.rawgit.com/NGenesis/altspacevr-behaviors/v0.4.6/js/UserEvents.js"></script>
+</head><body><script>
+var sim = new altspace.utilities.Simulation();
+var usersObj = new THREE.Object3D;
+var growObj = new THREE.Object3D;
+sim.scene.add(growObj);
+var tempHeadObject = new THREE.Object3D;
+var tempSpineObject = new THREE.Object3D;
+var tempLHObject = new THREE.Object3D;
+var tempRHObject = new THREE.Object3D;
+firebase.initializeApp({databaseURL: "https://playhouse-1dcf1.firebaseio.com/"});
+var timeSync;
+var god = "evildoer";
+var offset = new THREE.Vector3(-2.53955, 1.40616, -5.91162);
+var scale = 15;
+
+sim.scene.addBehavior(new altspaceutil.behaviors.UserEvents());
+sim.scene.addEventListener('avatarchange', function(event){
+	if(event.detail.colors.primary){var primary = event.detail.colors.primary
+	}else{primary = {"r": 1, "g": 1, "b": 1}}
+
+	if(primary.r > 1 || primary.g > 1 || primary.b > 1){
+		var highVal = Math.max(primary.r, primary.g, primary.b);
+		primaryColor = new THREE.Color(primary.r/highVal, primary.g/highVal, 
+		primary.b/highVal);
+	}else{primaryColor = new THREE.Color(primary.r, primary.g, primary.b)};
+
+	if(event.detail.colors.highlight){var highlight = event.detail.colors.highlight
+		}else{highlight = {"r": 1, "g": 1, "b": 1}}
+
+	if(highlight.r > 1 || highlight.g > 1 || highlight.b > 1){
+		var highVal = Math.max(highlight.r, highlight.g, highlight.b);
+		highlightColor = new THREE.Color(highlight.r/highVal, highlight.g/highVal, 
+		highlight.b/highVal);
+	}else{highlightColor = new THREE.Color(highlight.r, highlight.g, highlight.b)};
+
+	avatarId = event.detail.avatarId;
+	avatarTex = event.detail.textures;
+main()
+});
+function main(){
+
+	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+		sim.scene.add(skeleton);
+		headTrack = skeleton.getJoint("Head");
+		spineTrack = skeleton.getJoint("Spine");
+		(function keepLooking(){
+			leftHandTrack = skeleton.getJoint("Hand", "Left");
+			rightHandTrack = skeleton.getJoint("Hand", "Right");
+			if(typeof leftHandTrack != "undefined" && typeof rightHandTrack != "undefined")return;
+			setTimeout(keepLooking, 1000/10);
+			//***FIX THIS TO STOP LOOKING AFTER A WHILE***
+		}());
+		altspace.getEnclosure().then(function(enclosure){
+			enclosure.requestFullspace();
+		});
+		altspace.getUser().then(function(result){
+			displayName = result.displayName;
+			//userId = result.userId //will need eventually
+			UserDB = firebase.database().ref("Users/" + displayName);
+			UserDB.onDisconnect().remove();
+
+			sendTransforms();
+
+			UltimateLoader.load("sdk.obj", function(obj){
+				level = obj.children[0];
+				level.userData.altspace = {collider:{enabled: false}};
+				level.material.transparent = true;
+				level.material.opacity = 0.4;
+				level.position.copy(offset);
+				level.scale.divideScalar(scale);
+				sim.scene.add(level);
+				level.add(usersObj);
+
+				growObj.scale.multiplyScalar(scale);
+
+				offset.multiplyScalar(scale);
+				offset.negate();
+				growObj.position.copy(offset);
+				writeTransforms();
+			});
+		});
+	});
+
+	function sendTransforms(){
+		if(displayName != god){
+			setTimeout(function(){sendTransforms()}, 50);
+
+			UserDB.set({
+				"headPosition":{
+					"x": Math.round(headTrack.position.x *100)/100,
+					"y": Math.round(headTrack.position.y *100)/100,
+					"z": Math.round(headTrack.position.z *100)/100},
+				"headQuaternion":{
+					"x": Math.round(headTrack.quaternion.x *100)/100,
+					"y": Math.round(headTrack.quaternion.y *100)/100,
+					"z": Math.round(headTrack.quaternion.z *100)/100,
+					"w": Math.round(headTrack.quaternion.w *100)/100},
+				"spinePosition":{
+					"x": Math.round(spineTrack.position.x *100)/100,
+					"y": Math.round(spineTrack.position.y *100)/100,
+					"z": Math.round(spineTrack.position.z *100)/100},
+				"spineQuaternion":{
+					"x": 0, 
+					"y": Math.round(spineTrack.quaternion.y *100)/100,
+					"z": 0,	
+					"w": Math.round(spineTrack.quaternion.w *100)/100},
+				"colorPrimary":{
+					"r": Math.round(primaryColor.r *1000)/1000,
+					"g": Math.round(primaryColor.g *1000)/1000,
+					"b": Math.round(primaryColor.b *1000)/1000},
+				"colorHighlight":{
+					"r": Math.round(highlightColor.r *1000)/1000,
+					"g": Math.round(highlightColor.g *1000)/1000,
+					"b": Math.round(highlightColor.b *1000)/1000},
+				"avatarId": avatarId,
+				"avatarTex": avatarTex
+			});
+		};
+		if(displayName == god && leftHandTrack && rightHandTrack){
+			setTimeout(function(){sendTransforms()}, 50);
+
+			UserDB.set({
+				"headPosition":{
+					"x": Math.round(headTrack.position.x *1000)/1000,
+					"y": Math.round(headTrack.position.y *1000)/1000,
+					"z": Math.round(headTrack.position.z *1000)/1000},
+				"headQuaternion":{
+					"x": Math.round(headTrack.quaternion.x *1000)/1000,
+					"y": Math.round(headTrack.quaternion.y *1000)/1000,
+					"z": Math.round(headTrack.quaternion.z *1000)/1000,
+					"w": Math.round(headTrack.quaternion.w *1000)/1000},
+				"lhPosition":{
+					"x": Math.round(leftHandTrack.position.x *1000)/1000,
+					"y": Math.round(leftHandTrack.position.y *1000)/1000,
+					"z": Math.round(leftHandTrack.position.z *1000)/1000},
+				"lhQuaternion":{
+					"x": Math.round(leftHandTrack.quaternion.x *1000)/1000,
+					"y": Math.round(leftHandTrack.quaternion.y *1000)/1000,
+					"z": Math.round(leftHandTrack.quaternion.z *1000)/1000,
+					"w": Math.round(leftHandTrack.quaternion.w *1000)/1000},
+				"rhPosition":{
+					"x": Math.round(rightHandTrack.position.x *1000)/1000,
+					"y": Math.round(rightHandTrack.position.y *1000)/1000,
+					"z": Math.round(rightHandTrack.position.z *1000)/1000},
+				"rhQuaternion":{
+					"x": Math.round(rightHandTrack.quaternion.x *1000)/1000,
+					"y": Math.round(rightHandTrack.quaternion.y *1000)/1000,
+					"z": Math.round(rightHandTrack.quaternion.z *1000)/1000,
+					"w": Math.round(rightHandTrack.quaternion.w *1000)/1000},
+				"colorPrimary":{
+					"r": Math.round(primaryColor.r *1000)/1000,
+					"g": Math.round(primaryColor.g *1000)/1000,
+					"b": Math.round(primaryColor.b *1000)/1000},
+				"colorHighlight":{
+					"r": Math.round(highlightColor.r *1000)/1000,
+					"g": Math.round(highlightColor.g *1000)/1000,
+					"b": Math.round(highlightColor.b *1000)/1000},
+				"avatarId": avatarId,
+				"avatarTex": avatarTex
+			});
+		};
+	};
+	firebase.database().ref("Users").on("child_removed", function(snapshot){
+		usersObj.remove(usersObj.getObjectByName(snapshot.key +"_head"));
+		usersObj.remove(usersObj.getObjectByName(snapshot.key +"_body"));
+	});	
+	
+	function writeTransforms(){
+		firebase.database().ref("Users").on("child_added", function(snapshot){
+			var users = firebase.database().ref("Users")
+			var user = snapshot.key;
+			if(user == god){
+				if(!growObj.getObjectByName(snapshot.key +"_head")){
+					if(snapshot.child("avatarId").val() == "s-series-f01"){
+						UltimateLoader.load("PodSSeries01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled"), obj.getObjectByName("HeadGlow_Untitled.006"))
+							handleft = new THREE.Object3D;
+							handleft.add(obj.getObjectByName("HandLeft_Untitled.004"),obj.getObjectByName("HandLeftCol_Plane"));
+							handleft.children[1].material.visible = false;
+							handright = new THREE.Object3D;
+							handright.add(obj.getObjectByName("HandRight_Untitled.001"), obj.getObjectByName("handRightCol_Plane.001"));
+							handright.children[1].material.visible = false;
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handleft.children[1]);
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handright.children[1]);
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, head);
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							handleft.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							handright.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							growObj.add(head);
+							growObj.add(handleft);
+							growObj.add(handright);
+						});
+					}else{
+						UltimateLoader.load("PodSSeries02.obj", function(obj){
+							head = new THREE.Object3D;
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Head_Untitled.004"), obj.getObjectByName("HeadGlow_Head_Untitled.000"))
+							handleft = new THREE.Object3D;
+							handleft.add(obj.getObjectByName("HandLeft_HandLeft_Untitled.005"),obj.getObjectByName("HandLeftCol_Plane_Plane.001"));
+							handleft.children[1].material.visible = false;
+							handright = new THREE.Object3D;
+							handright.add(obj.getObjectByName("HandRight_HandRight_Untitled.001"), obj.getObjectByName("HandRightCol_Plane_Plane.000"));
+							handright.children[1].material.visible = false;
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handleft.children[1]);
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handright.children[1]);
+							if(displayName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, head);
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							handleft.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							handright.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							growObj.add(head);
+							growObj.add(handleft);
+							growObj.add(handright);
+						});
+					};
+				
+					users.child(user).child("headPosition").on("value", function(data){
+						if(typeof growObj.getObjectByName(user +"_head") != "undefined")posLerp(growObj.getObjectByName(user +"_head"), data.val());
+					});
+					users.child(user).child("headQuaternion").on("value", function(data){
+						var futureRotation = new THREE.Quaternion(data.val().x,
+							data.val().y, data.val().z, data.val().w);
+						if(typeof growObj.getObjectByName(user +"_head") != "undefined")rotLerp(growObj.getObjectByName(user +"_head"), futureRotation);
+					});
+					users.child(user).child("lhPosition").on("value", function(data){
+						if(typeof handleft != "undefined")posLerp(handleft, data.val());
+					});
+					users.child(user).child("lhQuaternion").on("value", function(data){
+						var futureRotation = new THREE.Quaternion(data.val().x,
+							data.val().y, data.val().z, data.val().w);
+						if(typeof handleft != "undefined")rotLerp(handleft, futureRotation);
+					});
+					users.child(user).child("rhPosition").on("value", function(data){
+						if(typeof handright != "undefined")posLerp(handright, data.val());
+					});
+					users.child(user).child("rhQuaternion").on("value", function(data){
+						var futureRotation = new THREE.Quaternion(data.val().x,
+							data.val().y, data.val().z, data.val().w);
+						if(typeof handright != "undefined")rotLerp(handright, futureRotation);
+					});
+				};
+			}else{ //not god
+				if(!usersObj.getObjectByName(user +"_head")){
+					if(snapshot.child("avatarId").val() == "camatar"){
+						UltimateLoader.load("camatar.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled"))
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.001"))
+							body.children[0].visible = false;
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "rubenoid-female-01"){
+						UltimateLoader.load("Rubenoid_Female_01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.003"), obj.getObjectByName("Hair_Untitled.001"));
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.002"), obj.getObjectByName("BodySkin_Untitled.011"));
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+
+							UltimateLoader.load("rubenoid-female-01_clothing-0" 
+								+snapshot.child("avatarTex").child("clothing").val() +".png",function(tex){
+									body.children[0].material.map = tex;	
+								});
+							UltimateLoader.load("rubenoid-female-01_hair-0" 
+								+snapshot.child("avatarTex").child("hair").val() +".png",function(tex){
+									head.children[1].material.map = tex;	
+								});
+							UltimateLoader.load("rubenoid-female-01_skin-0" 
+								+snapshot.child("avatarTex").child("skin").val() +".png",function(tex){
+									head.children[1].material.map = tex;
+									body.children[1].material.map = tex;	
+								});
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "rubenoid-male-01"){
+						UltimateLoader.load("Rubenoid_Male_01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.001"), obj.getObjectByName("Hair_Untitled.009"));
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.005"), obj.getObjectByName("BodySkin_Untitled.012"));
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+
+							UltimateLoader.load("rubenoid-male-01_clothing-0" 
+								+snapshot.child("avatarTex").child("clothing").val() +".png",function(tex){
+									body.children[0].material.map = tex;	
+								});
+							UltimateLoader.load("rubenoid-male-01_hair-0" 
+								+snapshot.child("avatarTex").child("hair").val() +".png",function(tex){
+									head.children[1].material.map = tex;	
+								});
+							UltimateLoader.load("rubenoid-male-01_skin-0" 
+								+snapshot.child("avatarTex").child("skin").val() +".png",function(tex){
+									head.children[1].material.map = tex;
+									body.children[1].material.map = tex;	
+								});
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "robothead-roundguy-01"){
+						UltimateLoader.load("Robothead_RoundGuy_01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.001"))
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.004"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "robothead-propellerhead-01"){
+						UltimateLoader.load("Robothead_PropellerHead_01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.002"), obj.getObjectByName("HeadGlow_Untitled.005"))
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.004"), obj.getObjectByName("BodyGlow_Untitled.006"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "a-series-m01"){
+						UltimateLoader.load("PodASeries01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.015"), obj.getObjectByName("HeadGlow_Untitled.010"))
+							head.children[1].visible = 0;
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.008"), obj.getObjectByName("BodyGlow_Untitled.012"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "x-series-m02"){
+						UltimateLoader.load("PodXSeries02.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled"), obj.getObjectByName("HeadGlow_Untitled.009"))
+						
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.002"), obj.getObjectByName("BodyGlow_Untitled.006"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "pod-classic"){
+						UltimateLoader.load("PodClassic.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled.001"), obj.getObjectByName("HeadGlow_Untitled.008"))
+						
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.003"), obj.getObjectByName("BodyGlow_Untitled.007"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else if(snapshot.child("avatarId").val() == "s-series-f01"){
+						UltimateLoader.load("PodSSeries01.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Untitled"), obj.getObjectByName("HeadGlow_Untitled.006"))
+						
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Untitled.005"), obj.getObjectByName("BodyGlow_Untitled.007"))
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					}else{
+						UltimateLoader.load("PodSSeries02.obj", function(obj){
+							head = new THREE.Object3D;
+							head.position.set(snapshot.child("headPosition").val().x, snapshot.child("headPosition").val().y,
+								snapshot.child("headPosition").val().z);
+							head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+								snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+							head.name = user +"_head";
+							head.add(obj.getObjectByName("Head_Head_Untitled.004"), obj.getObjectByName("HeadGlow_Head_Untitled.000"))
+							body = new THREE.Object3D;
+							body.position.set(snapshot.child("spinePosition").val().x, snapshot.child("spinePosition").val().y,
+								snapshot.child("spinePosition").val().z);
+							body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+								snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+							body.name = user +"_body";
+							body.add(obj.getObjectByName("Body_Body_Untitled"), obj.getObjectByName("BodyHighlight_Body_Untitled.001"));
+							head.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							head.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							body.children[0].material.color.setRGB(snapshot.child("colorPrimary/r").val(),
+								snapshot.child("colorPrimary/g").val(), snapshot.child("colorPrimary/b").val());
+							body.children[1].material.color.setRGB(snapshot.child("colorHighlight/r").val(),
+								snapshot.child("colorHighlight/g").val(), snapshot.child("colorHighlight/b").val());
+							usersObj.add(head);
+							usersObj.add(body);
+						});
+					};
+				
+					users.child(user).child("headPosition").on("value", function(data){
+						if(typeof usersObj.getObjectByName(user +"_head") != "undefined")posLerp(usersObj.getObjectByName(user +"_head"), data.val());
+					});
+					users.child(user).child("headQuaternion").on("value", function(data){
+						var futureRotation = new THREE.Quaternion(data.val().x,
+							data.val().y, data.val().z, data.val().w);
+						if(typeof usersObj.getObjectByName(user +"_head") != "undefined")rotLerp(usersObj.getObjectByName(user +"_head"), futureRotation);
+					});
+					users.child(user).child("spinePosition").on("value", function(data){
+						if(typeof usersObj.getObjectByName(user +"_body") != "undefined")posLerp(usersObj.getObjectByName(user +"_body"), data.val());
+					});
+					users.child(user).child("spineQuaternion").on("value", function(data){
+						var futureRotation = new THREE.Quaternion(data.val().x,
+							data.val().y, data.val().z, data.val().w);
+						if(typeof usersObj.getObjectByName(user +"_body") != "undefined")rotLerp(usersObj.getObjectByName(user +"_body"), futureRotation);
+					});
+				};
+			};
+		});
+	};
+};
+function posLerp(object, newPos){
+	var time = Date.now();
+	var oldPos = new THREE.Vector3(object.position.x, object.position.y, object.position.z);
+	(function loop(){
+		var progress = Date.now() - time;
+		if(progress > 50)return;
+		object.position.lerpVectors(oldPos, newPos, progress/50);
+		requestAnimationFrame(loop);
+	}());
+};
+function rotLerp(object, newRot){
+	var time = Date.now();
+	var oldRot = new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w);
+	(function loop(){
+		var progress = Date.now() - time;
+		if(progress > 50)return;
+		THREE.Quaternion.slerp(oldRot, newRot, object.quaternion, progress/50);
+		requestAnimationFrame(loop);
+	}());
+};
+</script></body></html>
