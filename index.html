@@ -1,0 +1,111 @@
+<html><head><title>schmidtec</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
+<script src="https://cdn.rawgit.com/Ooblik/AltspaceVR-Native-Components-JS/master/js/JSNativeComponents.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/2.0.3/altspace.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+</head><body><script>
+var sim = new altspace.utilities.Simulation();
+var god = "schmidtec"
+var fps = 1000/45;
+var scale = 6;
+var growObj = new THREE.Object3D;
+growObj.scale.multiplyScalar(scale);
+sim.scene.add(growObj);
+
+firebase.initializeApp({databaseURL: "https://schmidtec-1b8d5.firebaseio.com/"});
+
+altspace.getEnclosure().then(function(enclosure){
+	enclosure.requestFullspace();
+	altspace.getUser().then(function(result){
+		userName = result.displayName;
+		schmidtecDB = firebase.database().ref("User/schmidtec");
+		altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+			sim.scene.add(skeleton);
+			headTrack = skeleton.getJoint("Head");
+			spineTrack = skeleton.getJoint("Spine");
+			if(userName == god)sendTransforms();
+		});
+	});
+});
+UltimateLoader.load("schmidtec.obj", function(obj){
+	schmidtec = obj;
+	sim.scene.add(schmidtec);
+	writeTransforms();
+});
+altspace.getUser().then(function(result){
+	userName = result.displayName;
+	schmidtecDB = firebase.database().ref("User/schmidtec");
+});
+function sendTransforms(){
+	setTimeout(function(){sendTransforms()}, fps);
+	
+	schmidtecDB.set({
+		"headPosition":{
+			"x": Math.round(headTrack.position.x *1000)/1000,
+			"y": Math.round(headTrack.position.y *1000)/1000,
+			"z": Math.round(headTrack.position.z *1000)/1000},
+		"headQuaternion":{
+			"x": Math.round(headTrack.quaternion.x *1000)/1000,
+			"y": Math.round(headTrack.quaternion.y *1000)/1000,
+			"z": Math.round(headTrack.quaternion.z *1000)/1000,
+			"w": Math.round(headTrack.quaternion.w *1000)/1000},
+		"spinePosition":{
+			"x": Math.round(spineTrack.position.x *1000)/1000,
+			"y": Math.round(spineTrack.position.y *1000)/1000,
+			"z": Math.round(spineTrack.position.z *1000)/1000},
+		"spineQuaternion":{
+			"x": 0, 
+			"y": Math.round(spineTrack.quaternion.y *1000)/1000,
+			"z": 0,	
+			"w": Math.round(spineTrack.quaternion.w *1000)/1000}
+	});
+};
+function writeTransforms(){
+	firebase.database().ref("User").on("child_added", function(snapshot){
+		var users = firebase.database().ref("User");
+		var user = snapshot.key;
+		head = new THREE.Object3D;
+		head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
+			snapshot.child("headPosition").val().z);
+		head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
+			snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
+		head.add(schmidtec.getObjectByName("Head_Head_Untitled.001"), schmidtec.getObjectByName("Hair_Hair_Untitled.009"));
+		head.children[0].material.side = 2;
+		head.children[1].material.side = 2;
+		body = new THREE.Object3D;
+		body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
+			snapshot.child("spinePosition").val().z);
+		body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
+			snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
+		body.add(schmidtec.getObjectByName("Body_Body_Untitled.005"), schmidtec.getObjectByName("BodySkin_BodySkin_Untitled.012"));
+		if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, head);
+		if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, body);
+		growObj.add(head);
+		growObj.add(body);
+		var temp = new THREE.Vector3;
+		users.child(user).child("headPosition").on("value", function(data){
+			head.position.copy(data.val());
+		});
+		users.child(user).child("headQuaternion").on("value", function(data){
+			var futureRotation = new THREE.Quaternion(data.val().x,
+				data.val().y, data.val().z, data.val().w);
+			head.quaternion.copy(futureRotation)
+		});
+		users.child(user).child("spinePosition").on("value", function(data){
+			body.position.copy(data.val());
+			temp.copy(body.position)
+			temp.multiplyScalar(scale)
+			temp.negate();
+			temp.add(body.position)
+			temp.y += .6;
+			growObj.position.copy(temp)
+		});
+		users.child(user).child("spineQuaternion").on("value", function(data){
+			var futureRotation = new THREE.Quaternion(data.val().x,
+				data.val().y, data.val().z, data.val().w);
+			body.quaternion.copy(futureRotation)
+		});
+	});
+};
+</script></body></html>
