@@ -71,8 +71,6 @@ function writeTransforms(){
 		head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
 			snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
 		head.add(schmidtec.getObjectByName("Head_Head_Untitled.001"), schmidtec.getObjectByName("Hair_Hair_Untitled.009"));
-		head.children[0].material.side = 2;
-		head.children[1].material.side = 2;
 		body = new THREE.Object3D;
 		body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
 			snapshot.child("spinePosition").val().z);
