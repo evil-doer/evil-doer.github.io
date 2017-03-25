@@ -7,8 +7,9 @@
 </head><body><script>
 var sim = new altspace.utilities.Simulation();
 var god = "schmidtec"
-var fps = 1000/45;
+var fps = 1000/30;
 var scale = 6;
+var noHands = true;
 var growObj = new THREE.Object3D;
 growObj.scale.multiplyScalar(scale);
 sim.scene.add(growObj);
@@ -20,25 +21,42 @@ altspace.getEnclosure().then(function(enclosure){
 	altspace.getUser().then(function(result){
 		userName = result.displayName;
 		schmidtecDB = firebase.database().ref("User/schmidtec");
-		altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
-			sim.scene.add(skeleton);
-			headTrack = skeleton.getJoint("Head");
-			spineTrack = skeleton.getJoint("Spine");
-			if(userName == god)sendTransforms();
+		schmidtecDB.onDisconnect().remove();
+		UltimateLoader.load("schmidtec.obj", function(obj){
+			schmidtec = obj;
+			sim.scene.add(schmidtec);
+			writeTransforms();
 		});
+		
+		if(userName == god){
+			altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+				sim.scene.add(skeleton);
+				headTrack = skeleton.getJoint("Head");
+				spineTrack = skeleton.getJoint("Spine");
+				var waitForHands = true;
+				(function keepLooking(){
+					leftHandTrack = skeleton.getJoint("Hand", "Left");
+					rightHandTrack = skeleton.getJoint("Hand", "Right");
+					if(typeof leftHandTrack != "undefined" && typeof rightHandTrack != "undefined"){
+						noHands = false;
+						return;
+					};
+					if(waitForHands == false)return;
+					setTimeout(keepLooking, 1000/10);
+				}());
+				setTimeout(function(){
+					waitForHands = false;
+					if(typeof leftHandTrack == "undefined" && typeof rightHandTrack == "undefined"){
+						noHands = true;
+						sendWithout();
+					}else{sendWith()};
+				}, 2000)
+			});
+		};
 	});
 });
-UltimateLoader.load("schmidtec.obj", function(obj){
-	schmidtec = obj;
-	sim.scene.add(schmidtec);
-	writeTransforms();
-});
-altspace.getUser().then(function(result){
-	userName = result.displayName;
-	schmidtecDB = firebase.database().ref("User/schmidtec");
-});
-function sendTransforms(){
-	setTimeout(function(){sendTransforms()}, fps);
+function sendWithout(){
+	setTimeout(function(){sendWithout()}, fps);
 	
 	schmidtecDB.set({
 		"headPosition":{
@@ -58,30 +76,82 @@ function sendTransforms(){
 			"x": 0, 
 			"y": Math.round(spineTrack.quaternion.y *1000)/1000,
 			"z": 0,	
-			"w": Math.round(spineTrack.quaternion.w *1000)/1000}
+			"w": Math.round(spineTrack.quaternion.w *1000)/1000},
+		"noHands": noHands
+	});
+};
+function sendWith(){
+	setTimeout(function(){sendWith()}, fps);
+	
+	schmidtecDB.set({
+		"headPosition":{
+			"x": Math.round(headTrack.position.x *1000)/1000,
+			"y": Math.round(headTrack.position.y *1000)/1000,
+			"z": Math.round(headTrack.position.z *1000)/1000},
+		"headQuaternion":{
+			"x": Math.round(headTrack.quaternion.x *1000)/1000,
+			"y": Math.round(headTrack.quaternion.y *1000)/1000,
+			"z": Math.round(headTrack.quaternion.z *1000)/1000,
+			"w": Math.round(headTrack.quaternion.w *1000)/1000},
+		"spinePosition":{
+			"x": Math.round(spineTrack.position.x *1000)/1000,
+			"y": Math.round(spineTrack.position.y *1000)/1000,
+			"z": Math.round(spineTrack.position.z *1000)/1000},
+		"spineQuaternion":{
+			"x": 0, 
+			"y": Math.round(spineTrack.quaternion.y *1000)/1000,
+			"z": 0,	
+			"w": Math.round(spineTrack.quaternion.w *1000)/1000},
+		"lhPosition":{
+			"x": Math.round(leftHandTrack.position.x *1000)/1000,
+			"y": Math.round(leftHandTrack.position.y *1000)/1000,
+			"z": Math.round(leftHandTrack.position.z *1000)/1000},
+		"lhQuaternion":{
+			"x": Math.round(leftHandTrack.quaternion.x *1000)/1000,
+			"y": Math.round(leftHandTrack.quaternion.y *1000)/1000,
+			"z": Math.round(leftHandTrack.quaternion.z *1000)/1000,
+			"w": Math.round(leftHandTrack.quaternion.w *1000)/1000},
+		"rhPosition":{
+			"x": Math.round(rightHandTrack.position.x *1000)/1000,
+			"y": Math.round(rightHandTrack.position.y *1000)/1000,
+			"z": Math.round(rightHandTrack.position.z *1000)/1000},
+		"rhQuaternion":{
+			"x": Math.round(rightHandTrack.quaternion.x *1000)/1000,
+			"y": Math.round(rightHandTrack.quaternion.y *1000)/1000,
+			"z": Math.round(rightHandTrack.quaternion.z *1000)/1000,
+			"w": Math.round(rightHandTrack.quaternion.w *1000)/1000},
+		"noHands": noHands
 	});
 };
 function writeTransforms(){
+	head = new THREE.Object3D;
+	body = new THREE.Object3D;
+	handleft = new THREE.Object3D;
+	handright = new THREE.Object3D;
+	head.position.y = -100;
+	body.position.y = -100;
+	handleft.position.y = -100;
+	handright.position.y = -100;
+	head.add(schmidtec.getObjectByName("Head"), schmidtec.getObjectByName("Hair"));
+	body.add(schmidtec.getObjectByName("Body"), schmidtec.getObjectByName("BodyArms"));
+	handleft.add(schmidtec.getObjectByName("HandLeft"), schmidtec.getObjectByName("HandLeftCuff"));
+	handright.add(schmidtec.getObjectByName("HandRight"), schmidtec.getObjectByName("HandRightCuff"));
+	if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, head);
+	if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, body);
+	if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handleft);
+	if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, handright);
+	growObj.add(head, body);
+	growObj.add(handleft, handright);
+
 	firebase.database().ref("User").on("child_added", function(snapshot){
 		var users = firebase.database().ref("User");
 		var user = snapshot.key;
-		head = new THREE.Object3D;
-		head.position.set(snapshot.child("headPosition").val().x,snapshot.child("headPosition").val().y,
-			snapshot.child("headPosition").val().z);
-		head.quaternion.set(snapshot.child("headQuaternion").val().x,snapshot.child("headQuaternion").val().y,
-			snapshot.child("headQuaternion").val().z, snapshot.child("headQuaternion").val().w);
-		head.add(schmidtec.getObjectByName("Head_Head_Untitled.001"), schmidtec.getObjectByName("Hair_Hair_Untitled.009"));
-		body = new THREE.Object3D;
-		body.position.set(snapshot.child("spinePosition").val().x,snapshot.child("spinePosition").val().y,
-			snapshot.child("spinePosition").val().z);
-		body.quaternion.set(snapshot.child("spineQuaternion").val().x,snapshot.child("spineQuaternion").val().y,
-			snapshot.child("spineQuaternion").val().z, snapshot.child("spineQuaternion").val().w);
-		body.add(schmidtec.getObjectByName("Body_Body_Untitled.005"), schmidtec.getObjectByName("BodySkin_BodySkin_Untitled.012"));
-		if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, head);
-		if(userName != god)var collider = new NativeComponent('n-mesh-collider', {type: "environment", convex: false}, body);
-		growObj.add(head);
-		growObj.add(body);
-		var temp = new THREE.Vector3;
+
+		users.child(user).child("noHands").once("value", function(data){
+			noHands = data.val()
+			body.children[1].visible = data.val();
+		});
+
 		users.child(user).child("headPosition").on("value", function(data){
 			head.position.copy(data.val());
 		});
@@ -90,6 +160,7 @@ function writeTransforms(){
 				data.val().y, data.val().z, data.val().w);
 			head.quaternion.copy(futureRotation)
 		});
+		var temp = new THREE.Vector3;
 		users.child(user).child("spinePosition").on("value", function(data){
 			body.position.copy(data.val());
 			temp.copy(body.position)
@@ -104,6 +175,24 @@ function writeTransforms(){
 				data.val().y, data.val().z, data.val().w);
 			body.quaternion.copy(futureRotation)
 		});
+		if(noHands == false){
+			users.child(user).child("lhPosition").on("value", function(data){
+				handleft.position.copy(data.val());
+			});
+			users.child(user).child("lhQuaternion").on("value", function(data){
+				var futureRotation = new THREE.Quaternion(data.val().x,
+					data.val().y, data.val().z, data.val().w);
+				handleft.quaternion.copy(futureRotation);
+			});
+			users.child(user).child("rhPosition").on("value", function(data){
+				handright.position.copy(data.val());
+			});
+			users.child(user).child("rhQuaternion").on("value", function(data){
+				var futureRotation = new THREE.Quaternion(data.val().x,
+					data.val().y, data.val().z, data.val().w);
+				handright.quaternion.copy(futureRotation);
+			});
+		};
 	});
 };
 </script></body></html>
