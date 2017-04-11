@@ -12,8 +12,8 @@ var users = {};
 var usersObj = new THREE.Object3D;
 var growObj = new THREE.Object3D;
 sim.scene.add(growObj);
-//var socket = io.connect("http://199.233.244.76:25543");
-var socket = io.connect("http://99.253.167.142:25543");
+var socket = io.connect("ws://199.233.244.76:25543");
+//var socket = io.connect("https://99.253.167.142:25543");
 var hands = false;
 var offset = new THREE.Vector3(-2.53955, 1.40616, -5.91162);
 var fps = 1000/20
