@@ -1,8 +1,10 @@
-<html><head><title>Sana's Room</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<html><head><title>Sanas Room</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
 <script src="https://cdn.rawgit.com/Ooblik/AltVRNC/master/dist/AltVRNC.min.js"></script>
-<script src="https://sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/2.2.0/altspace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="https://evil-doer.github.io/dist/timesync.min.js"></script>
 </head><body><script>
 
 var renderer = altspace.getThreeJSRenderer();
@@ -15,6 +17,19 @@ var models = ["models/sana/swordinstone.obj", "models/sana/grass.obj", "models/s
 var timer;
 var angle = 1;
 
+var socket = io.connect("http://199.233.244.76:25544", {"reconnectionAttempts": 3}); 
+var epoch = new Date();
+var ts = timesync.create({server: socket});
+ts.on("change", function(offset){
+  console.log("changed offset: " + offset + " ms");
+});
+ts.send = function(socket, data){
+  socket.emit("timesync", data);
+};
+socket.on("timesync", function(data){
+	ts.receive(null, data);
+});
+
 var headPos = new THREE.Object3D;
 scene.add(headPos);
 
@@ -25,16 +40,16 @@ headPos.add(soundPos);
 var alarm = new NativeComponent('n-sound', {src: "sounds/Alarm.ogg", volume: 1, loop: true}).addTo(soundPos);
 var alarmPlaying = true;
 
-(function setup(){
-	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
-		scene.add(skeleton);
-		headTrack = skeleton.getJoint("Head");
-		altspace.getEnclosure().then(function(enclosure){
-			enclosure.requestFullspace();
-			main();
-		});
+
+altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+	scene.add(skeleton);
+	headTrack = skeleton.getJoint("Head");
+	altspace.getEnclosure().then(function(enclosure){
+		enclosure.requestFullspace();
+		main();
 	});
-})();
+});
+
 
 function main(){
 	UltimateLoader.multiload(models, function(obj){
@@ -54,8 +69,8 @@ function main(){
 		scream = new NativeComponent('n-sound', {src: "sounds/PsychoScream.ogg", volume: 1, minDistance: 3}).addTo(skull);
 		
 		scene.add(parlor = obj[17]);
-		parlor.position.y = -1000;
 		parlor.traverse(function(child){
+			child.visible = false;
 			child.userData.altspace = {collider:{enabled: false}};
 		});
 		scene.add(snow = obj[3]);
@@ -74,7 +89,6 @@ function main(){
 		scene.add(sana = obj[5]);
 		sana.rotation.y = THREE.Math.degToRad(-90);
 		sana.position.set(-5.4329, 5.776, -1.32);
-		
 		scene.add(clock = obj[6]);
 		clock.position.set(-4.03079, 3.40802, -8.21589);
 		scene.add(minute = obj[7]);
@@ -83,7 +97,6 @@ function main(){
 		hour.position.set(-4.03079, 3.40802, -8.215899);
 		scene.add(second = obj[9]);
 		second.position.set(-4.03079, 3.40802, -8.21589);
-	
 		scene.add(threepictures = obj[10]);
 		threepictures.position.set(-5.6829, 4.146, -1.32);
 		scene.add(backing = obj[11]);
@@ -101,24 +114,16 @@ function main(){
 		curvewall.traverse(function(child){
 			child.userData.altspace = {collider:{enabled: false}};
 		});
-		
-		scene.traverse(function(child){ //fix for ultimateloader loading double sided textures by default
-			if(child instanceof THREE.Mesh){
-				child.material.side = 0;
-			};
-		});
 
 		UltimateLoader.load("images/sana/swirl.png", function(texture){
 			var geometry = new THREE.PlaneGeometry(0.2, 0.2);
 			var material = new THREE.MeshBasicMaterial({map: texture, transparent: true, opacity: 0.1, side: THREE.DoubleSide});
 			swirl = new THREE.Mesh(geometry, material);
-			swirl.position.y = -1000;
-			swirl.position.z = 0.5;
+			swirl.position.z = -0.5;
 			swirl.scale.multiplyScalar(8);
 			swirl.traverse(function(child){
 				child.userData.altspace = {collider:{enabled: false}};
 			});
-			headTrack.add(swirl);
 		});
 		
 		var geometry = new THREE.BoxGeometry(0.16, 0.16, 0.16);
@@ -137,12 +142,14 @@ function main(){
 		scene.add(cube2);
 		cube2.addEventListener("cursorup", function(){craziness()});
 		
+		var attachSwirl;
+
 		function craziness(){
 			if(alarmPlaying){
 				alarmPlaying = false;
 				alarm.call("play");
-				parlor.position.y = 0;
-				swirl.position.y = 0;
+				parlor.traverse(function(child){child.visible = true});
+				attachSwirl = new NativeComponent('n-skeleton-parent', {part: "head"}, swirl).addTo(scene);
 				i=0;
 		
 				(function loop(){
@@ -159,8 +166,8 @@ function main(){
 				alarmPlaying = true; 
 				alarm.call("pause");
 				alarm.call("seek", {time:0});
-				parlor.position.y = -1000;
-				swirl.position.y = -1000;
+				parlor.traverse(function(child){child.visible = false});
+				attachSwirl.remove();
 				return;
 			};
 		};
@@ -232,13 +239,14 @@ function main(){
 		});
 		
 		now = new Date(TimeZoneVal);
+		epoch = ts.now()/1000;
 		second.rotation.z = 2* -Math.PI*now.getSeconds()/60;
 		minute.rotation.z = 2* -Math.PI*(now.getMinutes()+now.getSeconds()/60)/60;
 		hour.rotation.z = 2* -Math.PI*(now.getHours()*60+now.getMinutes())/720;
-		molecule.rotation.x += 0.005;
-		molecule.rotation.y += 0.005;
-		molecule.rotation.z += 0.005;
-		sana.position.y = 5.776+0.12*Math.cos(angle -= .02);
+		molecule.rotation.x = epoch / 3 % (Math.PI * 2);
+		molecule.rotation.y = epoch / 3 % (Math.PI * 2);
+		molecule.rotation.z = epoch / 3 % (Math.PI * 2);
+		sana.position.y = 5.776+0.12*Math.sin(epoch);
 		sky.rotation.y += 0.0005;
 		if(Date.now() > (timer + 4050)){
 			skull.position.set(5.3071, -1000, -8.99);
