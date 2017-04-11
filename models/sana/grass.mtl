@@ -1,14 +1,7 @@
-newmtl grid2SG
-illum 4
+newmtl None
 Kd 1 1 1
-Ka 0.30 0.30 0.30
-Tf 1.00 1.00 1.00
-Ni 1.00
-map_Kd Grass1.jpg
-newmtl grid3SG
-illum 4
-Kd 1 1 1
-Ka 0.30 0.30 0.30
-Tf 1.00 1.00 1.00
-Ni 1.00
 map_Kd Grass4.jpg
+
+newmtl None_Grass1.jpg
+Kd 1 1 1
+map_Kd Grass1.jpg

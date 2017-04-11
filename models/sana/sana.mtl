@@ -1,13 +1,3 @@
-# Blender MTL File: 'None'
-# Material Count: 1
-
-newmtl PodSSeries01_unlit_combined_mtl
-Ns 0.000000
-Ka 0.200000 0.200000 0.200000
+newmtl None
 Kd 1 1 1
-Ks 0.200000 0.200000 0.200000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
 map_Kd sana.jpg
-illum 2
