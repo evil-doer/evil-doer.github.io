@@ -18,10 +18,7 @@ var timer;
 var angle = 1;
 
 var socket = io.connect("https://199.233.244.76:25544", {
-	"reconnectionAttempts": 3,
-	"rejectUnauthorized": false,
- 	"requestCert": true,
- 	"agent": false
+	"reconnectionAttempts": 3
 }); 
 var epoch = new Date();
 var ts = timesync.create({server: socket});
