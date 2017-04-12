@@ -17,7 +17,7 @@ var models = ["models/sana/swordinstone.obj", "models/sana/grass.obj", "models/s
 var timer;
 var angle = 1;
 
-var socket = io.connect("199.233.244.76:25544", {"reconnectionAttempts": 3}); 
+var socket = io.connect("wss://199.233.244.76:25544", {"reconnectionAttempts": 3}); 
 var epoch = new Date();
 var ts = timesync.create({server: socket});
 ts.on("change", function(offset){
