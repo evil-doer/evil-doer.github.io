@@ -2,11 +2,11 @@
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
 <script src="https://cdn.rawgit.com/norybiak/UltimateLoader/master/dist/UltimateLoader.min.js"></script>
 <script src="https://cdn.rawgit.com/Ooblik/AltVRNC/master/dist/AltVRNC.min.js"></script>
-<script src="https://sdk.altvr.com/libs/altspace.js/2.0.3/altspace.min.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/2.2.0/altspace.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
 </head><body><script>
 var sim = new altspace.utilities.Simulation();
-var god = "schmidtec"
+var god = "schmidtec";
 var fps = 1000/30;
 var scale = 6;
 var noHands = true;
@@ -56,7 +56,7 @@ altspace.getEnclosure().then(function(enclosure){
 	});
 });
 function sendWithout(){
-	setTimeout(function(){sendWithout()}, fps);
+	setTimeout(sendWithout, fps);
 	
 	schmidtecDB.set({
 		"headPosition":{
@@ -81,7 +81,7 @@ function sendWithout(){
 	});
 };
 function sendWith(){
-	setTimeout(function(){sendWith()}, fps);
+	setTimeout(sendWith, fps);
 	
 	schmidtecDB.set({
 		"headPosition":{
@@ -153,46 +153,81 @@ function writeTransforms(){
 		});
 
 		users.child(user).child("headPosition").on("value", function(data){
-			head.position.copy(data.val());
+			//head.position.copy(data.val());
+			posLerp(head, data.val());
 		});
 		users.child(user).child("headQuaternion").on("value", function(data){
 			var futureRotation = new THREE.Quaternion(data.val().x,
 				data.val().y, data.val().z, data.val().w);
-			head.quaternion.copy(futureRotation)
+			//head.quaternion.copy(futureRotation)
+			rotLerp(head, futureRotation);
 		});
-		var temp = new THREE.Vector3;
+
 		users.child(user).child("spinePosition").on("value", function(data){
-			body.position.copy(data.val());
-			temp.copy(body.position)
-			temp.multiplyScalar(scale)
-			temp.negate();
-			temp.add(body.position)
-			temp.y += .6;
-			growObj.position.copy(temp)
+			//body.position.copy(data.val());
+			posLerp(body, data.val());
+
 		});
 		users.child(user).child("spineQuaternion").on("value", function(data){
 			var futureRotation = new THREE.Quaternion(data.val().x,
 				data.val().y, data.val().z, data.val().w);
-			body.quaternion.copy(futureRotation)
+			//body.quaternion.copy(futureRotation)
+			rotLerp(body, futureRotation);
 		});
 		if(noHands == false){
 			users.child(user).child("lhPosition").on("value", function(data){
-				handleft.position.copy(data.val());
+				//handleft.position.copy(data.val());
+				posLerp(handleft, data.val());
 			});
 			users.child(user).child("lhQuaternion").on("value", function(data){
 				var futureRotation = new THREE.Quaternion(data.val().x,
 					data.val().y, data.val().z, data.val().w);
-				handleft.quaternion.copy(futureRotation);
+				//handleft.quaternion.copy(futureRotation);
+				rotLerp(handleft, futureRotation);
 			});
 			users.child(user).child("rhPosition").on("value", function(data){
-				handright.position.copy(data.val());
+				//handright.position.copy(data.val());
+				posLerp(handright, data.val());
 			});
 			users.child(user).child("rhQuaternion").on("value", function(data){
 				var futureRotation = new THREE.Quaternion(data.val().x,
 					data.val().y, data.val().z, data.val().w);
-				handright.quaternion.copy(futureRotation);
+				//handright.quaternion.copy(futureRotation);
+				rotLerp(handright, futureRotation);
 			});
 		};
 	});
+
+	function posLerp(object, newPos){
+		var time = Date.now();
+		var oldPos = new THREE.Vector3(object.position.x, object.position.y, object.position.z);
+		
+		(function loop(){
+			var progress = Date.now() - time;
+			if(progress > fps)return;
+			object.position.lerpVectors(oldPos, newPos, progress/fps);
+			requestAnimationFrame(loop);
+			if(object == body){
+				var temp = new THREE.Vector3;
+				temp.copy(body.position);
+				temp.multiplyScalar(scale);
+				temp.negate();
+				temp.add(body.position);
+				temp.y += .6;
+				growObj.position.copy(temp);
+			}
+		}());
+	};
+	function rotLerp(object, newRot){
+		var time = Date.now();
+		var oldRot = new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w);
+
+		(function loop(){
+			var progress = Date.now() - time;
+			if(progress > fps)return;
+			THREE.Quaternion.slerp(oldRot, newRot, object.quaternion, progress/fps);
+			requestAnimationFrame(loop);
+		}());
+	};
 };
 </script></body></html>
