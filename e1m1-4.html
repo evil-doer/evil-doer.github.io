@@ -113,7 +113,7 @@ function main(){
 	
 	//write timeSync value to firebase and remove user if timestamp is 5 seconds old
 	function syncTime(){
-		$.getJSON("http://time.jsontest.com/", function(data){
+		$.getJSON("https://ssl-proxy.my-addr.org/myaddrproxy.php/http/time.jsontest.com/", function(data){
 			var syncedTime = data.milliseconds_since_epoch;
 			var timeDiff = syncedTime - Date.now();
 			
