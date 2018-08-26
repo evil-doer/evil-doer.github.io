@@ -118,29 +118,26 @@ function main(){
 	};
 	
 	//write timeSync value to firebase and remove user if timestamp is 5 seconds old
-	function syncTime(){
-		$.getJSON("http://time.jsontest.com/", function(data){
-			var syncedTime = data.milliseconds_since_epoch;
-			var timeDiff = syncedTime - Date.now();
-			
-			setInterval(function(){
-				timeSync = Date.now() + timeDiff;
-				UserDB.child("timeSync").set(timeSync);
-				
-				firebase.database().ref("Users").once("value", function(snapshot){
-					snapshot.forEach(function(childSnapshot){
-						if(childSnapshot.child("timeSync").val()){ //must check if not null
-							if(childSnapshot.child("timeSync").val() < (timeSync - 5000)){
-								firebase.database().ref("Users/" + childSnapshot.key).remove();
-								usersObj.remove(usersObj.getObjectByName(childSnapshot.key));
-								if(usersObj.closest == childSnapshot.key)usersObj.closest = displayName;
-							};
-						};
-					});
-				});
-			},1000);
-		});
-	};
+function syncTime() {
+    var timeDiff = 0;
+            
+    setInterval(function(){
+        timeSync = Date.now() + timeDiff;
+        UserDB.child("timeSync").set(timeSync);
+                
+        firebase.database().ref("Users").once("value", function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                if(childSnapshot.child("timeSync").val()){ //must check if not null
+                    if(childSnapshot.child("timeSync").val() < (timeSync - 5000)){
+                        firebase.database().ref("Users/" + childSnapshot.key).remove();
+                        usersObj.remove(usersObj.getObjectByName(childSnapshot.key));
+                        if(usersObj.closest == childSnapshot.key)usersObj.closest = displayName;
+                    };
+                };
+            });
+        });
+    },1000);
+}
 	// write firebase positions and rotations to usersObj
 	function getPositions(){
 		firebase.database().ref("Users").on("child_changed", function(snapshot){
