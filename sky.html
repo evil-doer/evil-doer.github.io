@@ -12,7 +12,7 @@
             var renderer = altspace.getThreeJSRenderer();
             var loader = new THREE.TextureLoader();
             loader.load("jetsonsbackground.jpg", function(texture){
-                var geometry = new THREE.SphereGeometry(1000, 36, 36);
+                var geometry = new THREE.SphereGeometry(250000, 36, 36);
                 var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide});
                 sky = new THREE.Mesh(geometry, material);
                 scene.add(sky);
