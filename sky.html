@@ -14,7 +14,7 @@
             loader.load("jetsonsbackground.jpg", function(texture){
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.repeat.x = - 1;
-                var geometry = new THREE.SphereGeometry(1000, 36, 36);
+                var geometry = new THREE.SphereGeometry(1000, 64, 64);
                 var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide});
                 sky = new THREE.Mesh(geometry, material);
                 scene.add(sky);
