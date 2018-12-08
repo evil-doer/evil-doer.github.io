@@ -16,8 +16,9 @@
                 var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide});
                 sky = new THREE.Mesh(geometry, material);
                 scene.add(sky);
+		    renderer.render(scene);
             });
-		renderer.render(scene);
+		
         </script>
     </body>
 </html>
