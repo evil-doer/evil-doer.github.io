@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Sky</title>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+        <script src="https://sdk.altvr.com/libs/altspace.js/2.2.1/altspace.min.js"></script>
+    </head>
+    <body>
+        <script>
+			var scene = new THREE.Scene();
+            var renderer = altspace.getThreeJSRenderer();
+            var loader = new THREE.TextureLoader();
+            loader.load("jetsonsbackground.jpg", function(texture){
+                var geometry = new THREE.SphereGeometry(250000, 36, 36);
+                var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide});
+                sky = new THREE.Mesh(geometry, material);
+                scene.add(sky);
+            });
+        </script>
+    </body>
+</html>
